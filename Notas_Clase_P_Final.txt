@@ -1,0 +1,60 @@
+Práctica final
+
+- Si no viene especificado lo puedes hacer como quieras (con sentido común)
+- En en enlace se puede bajar un csv de los museos
+- Tipos de campos en el modelo (charfield para el nombre, textfield para la descripción...)
+- El xml contiene la misma información solo que con otro formato
+- Recursos
+    "  /"               (La primera vez que acceda a la barra dirá "no hay museos cargados -> carar información. Si se da a cargar información, del xml pasará al modelo. al terminar si voy a /admin estarán todos los museos (hay 67 creo))
+    "/"                 Cuando sea la segunda o más vez que se acceda a la barra no viene especificado, pero sería lógico que se mostraran por ejemplo los 5 museos con más comentarios. En la barra también habrá una opción en la que si se pica te muestra los 5 museos con más comentarios pero con accesibilidad. El campo de accesibilidad es importante. Filtrado por TOP 5.
+    "/museos"           Aparecen los 60 museos. Un resumen de cada museo (nombre y descripción). Aquí también hay un filtro como en el caso anterior de "accesible" pero con distritos. No se especifica cómo hacerlo. Puede ser a través de un menú desplegable
+    "/museo/{id}        Muestra toda la información del museo en cuestión. id es una variable. Existe además la opción de comentario. Inicialmente se muestran los comentarios ya publicados. Si no estoy registrado se muestran los comentarios. Si estoy registrado se muestra también la opción de comentar, es decir, de añadir comentarios yo mismo.
+    "/about"            Esta página es de fulanito, estas son las URLs y funciona así
+    "/{usuario}"        Todos los usuarios pueden tener su página personal. En esa página aparecen los museos seleccionados por ese usuario. Si hay más de 5 museos seleccionados, se deben mostrar de 5 en 5. Si hay 7 museos seleccionados primero se deben buscar 5 y luego una opción para ver los siguientes. En esta página se puede: - modificar el título de la página (hay uno por defecto pero lo puedo cambiar). Puedo cambiar también el color de fondo y el tamaño de la fuente
+    "/{usuario}/xml"    Muestra en xml los todos los museos seleccionados por el usuario. Muestra los datos del modelo, no tiene por qué contener TODA la info original ni los mismos campos
+
+
+¿Cómo hacer nuestro modelo?
+- ¿Qué tablas necesitamos?
+1) Museos
+2) Selección (museoid (foreign key) | user (se podría poner el id del usuario, pero como su nombre es único es mejor coger el usuario)
+3) Usuario
+4) Comentario (texto, usuario, fecha)
+5) Conf (título de la página, tamaño de letra y color de fondo)
+
+Relación museos-usuarios es n a n
+Relación Museos-comentario es 1 a n
+Si no hay entrada en conf para un usuario, se coge el por defecto
+
+La plantilla tiene que tener 1 banner, una caja de entrada (login/logout) una barra de navegación con enlaces a usuarios, caja con listado de usuarios y un footer (pie de página)
+Cuando vas a la página de un usuario, hay que hacer un extend de la plantilla inicial porque no debe aparecer la barra de usuarios.
+
+Hay que usar css generado dinámicamente, como hacemos con todo lo demás que generamos HTML
+
+¿Qué grabar en el video?
+1) Pido la barra. Está vacío. Pulso para cargar
+2) Pido la barra. Me dice tengo 66 museos, ninguno con comentarios
+3) Pincho sobre mostrar todos los muesos. pincho sobre uno de ellos
+4) Se muestra la página de uno de los museos
+5) Voy a about para ver la info de la página
+6) Me logueo desde cualquier sitio
+7) En el museo en el que estoy añado otro comentario
+8) En la página principal ahora aparece 1 museo (ahora ya tiene un comentario)
+9) Voy a página grex, no hay museos
+10) Voy a barra y hago click en selecionado
+11) Voy a grex y veo que ya hay uno
+12) Voy a mi ususario y actualizo el título y cambio el color. Desde que cambio el color ya todas las páginas que visite las veré en ese color
+
+Parte básica: hasta 2 puntos. Hay que sacar 1 mínimo
+Parte avanzada: hasta 3 puntos
+
+
+Examen de teoría
+- Entender REST
+- Modelos
+- Sesión
+
+
+Dos formas de devolver el archivo css para el estilo. 1 es ir a la base de datos y componer el css como un string con la particularidad de cada usuario y añadirlo a la response. También se puede hacer una template y componerla con la info que saques de la BBDD. 
+Para consultar la BBDD hay que primero ver si ese usuario tiene una entrada en la tabla, porque la entrada se genera cuando el usuario loggeado decide cambiar la pariencia. Si no hay entrada, pues so es que no ha personalizado.
+HTTPResponse devuelve por defecto contentType, pero como en este caso es un css, hay que especificar que es un css y no es el contentType habitual
