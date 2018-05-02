@@ -99,3 +99,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# Ignorar Ideas_Mejoras.txt sin encriptar
+./Ideas_Mejoras.txt

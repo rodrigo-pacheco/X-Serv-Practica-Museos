@@ -55,6 +55,9 @@ Examen de teoría
 - Sesión
 
 
-Dos formas de devolver el archivo css para el estilo. 1 es ir a la base de datos y componer el css como un string con la particularidad de cada usuario y añadirlo a la response. También se puede hacer una template y componerla con la info que saques de la BBDD. 
+Dos formas de devolver el archivo css para el estilo. 1 es ir a la base de datos y componer el css como un string con la particularidad de cada usuario y añadirlo a la response. También se puede hacer una template y componerla con la info que saques de la BBDD.
 Para consultar la BBDD hay que primero ver si ese usuario tiene una entrada en la tabla, porque la entrada se genera cuando el usuario loggeado decide cambiar la pariencia. Si no hay entrada, pues so es que no ha personalizado.
 HTTPResponse devuelve por defecto contentType, pero como en este caso es un css, hay que especificar que es un css y no es el contentType habitual
+
+
+https://www.cyberciti.biz/tips/linux-or-unix-password-protecting-files.html
