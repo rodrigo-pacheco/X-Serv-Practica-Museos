@@ -1,3 +1,8 @@
+#  Rodrigo Pacheco
+#  Servicios y Aplicaciones Telemáticas. Universidad Rey Juan Carlos
+#  r.pachecom at alumnos dot urjc dot com
+
+
 """project_museums URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:

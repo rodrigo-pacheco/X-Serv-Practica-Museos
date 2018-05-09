@@ -1,3 +1,8 @@
+#  Rodrigo Pacheco
+#  Servicios y Aplicaciones Telemáticas. Universidad Rey Juan Carlos
+#  r.pachecom at alumnos dot urjc dot com
+
+
 Práctica final
 
 - Si no viene especificado lo puedes hacer como quieras (con sentido común)
