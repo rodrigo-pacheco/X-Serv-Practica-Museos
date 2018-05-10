@@ -15,7 +15,7 @@ import sys
 from urllib import request
 
 
-def ParseAndStore(source, itsurl):
+def parse_and_store(source, itsurl):
     if itsurl:
         try:
             tree = ET.parse(request.urlopen(sys.argv[1]))
@@ -39,6 +39,14 @@ def ParseAndStore(source, itsurl):
             descripcion = museum.find('atributos/atributo[@nombre="DESCRIPCION-ENTIDAD"]').text
             horario = museum.find('atributos/atributo[@nombre="HORARIO"]').text
             transporte = museum.find('atributos/atributo[@nombre="TRANSPORTE"]').text
+            accesibilidad = museum.find('atributos/atributo[@nombre="ACCESIBILIDAD"]').text
+            if accesibilidad == 1:
+                accesibilidad = True
+            else:
+                accesibilidad = False
+            web = museum.find('atributos/atributo[@nombre="CONTENT-URL"]').text
+            location = museum.find('atributos/atributo[@nombre="LOCALIZACION"]').text
+            direccion, barrio, distrito = get_location_info(location)
             separador = ' - '
             print(nombre, separador, descripcion, separador, horario, separador, transporte)
         except AttributeError:
@@ -51,4 +59,4 @@ def ParseAndStore(source, itsurl):
 
 if __name__ == '__main__':
     source = sys.argv[1]
-    ParseAndStore(source, False)
+    ParseAndStore(source, 0)
