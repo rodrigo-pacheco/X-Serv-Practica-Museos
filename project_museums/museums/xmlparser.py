@@ -81,7 +81,7 @@ def parse_to_matrix(source, itsurl):
             print('Could not parse ' + nombre)
             continue
 
-        matrix.append([nombre, accesibilidad])#, descripcion, horario, transporte, accesibilidad, web, direccion, barrio, distrito, email, telefono]
+        matrix.append([nombre, descripcion, horario, transporte, accesibilidad, web, direccion, barrio, distrito, telefono, email])
 
     return matrix
 
