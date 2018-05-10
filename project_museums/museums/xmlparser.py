@@ -11,22 +11,7 @@
 
 
 import xml.etree.ElementTree as ET
-import sys
 from urllib import request
-
-# After trying to run this program and botaining this exception:
-# django.core.exceptions.ImproperlyConfigured: Requested setting DEFAULT_INDEX_TABLESPACE, but settings are not configured. You must either define
-# the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.
-# I found this help to solve it here: https://stackoverflow.com/questions/8047204/django-script-to-access-model-objects-without-using-manage-py-shell
-# and here: https://stackoverflow.com/questions/15048963/alternative-to-the-deprecated-setup-environ-for-one-off-django-scripts
-
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "../project_museums/settings.py")
-
-# sys.path.append('../')              # https://stackoverflow.com/questions/4383571/importing-files-from-different-folder
-# file_dir = os.path.dirname('../models.py')      # https://stackoverflow.com/questions/24722212/python-cant-find-module-in-the-same-folder
-# sys.path.append(file_dir)
-from models import Museum
 
 
 def get_location_info(location):
@@ -58,10 +43,10 @@ def get_contact_info(contact):
     return email, telephone
 
 
-def parse_and_store(source, itsurl):
+def parse_to_matrix(source, itsurl):
     if itsurl:
         try:
-            tree = ET.parse(request.urlopen(sys.argv[1]))
+            tree = ET.parse(request.urlopen(source))
         except ValueError:
             exit('Could not parse URL')
         except ET.ParseError:
@@ -74,7 +59,7 @@ def parse_and_store(source, itsurl):
         except xml.etree.ElementTree.ParseError:
             exti(' Could not parse. \n Does not seem to be a proper XLM')
 
-
+    matrix = []                                                             # Eahc raw will contain information corresponding to one museum
     root = tree.getroot()
     for museum in root.iter('contenido'):
         try:
@@ -96,19 +81,10 @@ def parse_and_store(source, itsurl):
             print('Could not parse ' + nombre)
             continue
 
-        museum = Museum(name = nombre,
-                        description = descripcion,
-                        open_hours = horario,
-                        transport = transporte,
-                        accessibility = accesibilidad,
-                        url = web,
-                        address = direccion,
-                        quarter = barrio,
-                        district = distrito,
-                        tlf_number = telefono,
-                        email = email)
-        museum.save()
+        matrix.append([nombre, accesibilidad])#, descripcion, horario, transporte, accesibilidad, web, direccion, barrio, distrito, email, telefono]
+
+    return matrix
 
 if __name__ == '__main__':
     source = sys.argv[1]
-    parse_and_store(source, 0)
+    parse_to_matrix(source, 0)

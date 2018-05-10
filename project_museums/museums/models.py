@@ -5,7 +5,7 @@
 from django.db import models
 
 
-class Museumm(models.Model):
+class Museumm(models.Model):                    # Added extra m to avoid conflicts with app name(muesums)
     name = models.CharField(max_length=64)
     description = models.TextField()
     open_hours = models.TextField()
