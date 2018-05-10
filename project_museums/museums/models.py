@@ -5,7 +5,7 @@
 from django.db import models
 
 
-class Museum(models.Model):
+class Museumm(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField()
     open_hours = models.TextField()
@@ -25,7 +25,7 @@ class Museum(models.Model):
 class Comment(models.Model):
     date = models.DateTimeField()
     text = models.TextField()
-    museum = models.ForeignKey(Museum)
+    museum = models.ForeignKey(Museumm)
 
     def __str__(self):
         return self.date
@@ -34,7 +34,7 @@ class Comment(models.Model):
 class User(models.Model):
     name = models.CharField(max_length=12)
     password = models.CharField(max_length=12)
-    likes = models.ManyToManyField(Museum)
+    likes = models.ManyToManyField(Museumm)
 
     def __str__(self):
         return self.name

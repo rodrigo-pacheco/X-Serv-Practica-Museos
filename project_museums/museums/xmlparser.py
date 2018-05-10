@@ -21,8 +21,11 @@ from urllib import request
 # and here: https://stackoverflow.com/questions/15048963/alternative-to-the-deprecated-setup-environ-for-one-off-django-scripts
 
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "../project_museums/settings.py")
 
+# sys.path.append('../')              # https://stackoverflow.com/questions/4383571/importing-files-from-different-folder
+# file_dir = os.path.dirname('../models.py')      # https://stackoverflow.com/questions/24722212/python-cant-find-module-in-the-same-folder
+# sys.path.append(file_dir)
 from models import Museum
 
 
