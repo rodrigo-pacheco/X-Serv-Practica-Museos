@@ -33,11 +33,17 @@ def ParseAndStore(source, itsurl):
 
 
     root = tree.getroot()
-    for museum in r.iter('contenido'):
-        nombre = museum.find('atributos/atributo[@nombre="NOMBRE"]').text
-        descripcion = museum.find('atributos/atributo[@nombre="DESCRIPCION-ENTIDAD"]').text
-        horario = museum.find('atributos/atributo[@nombre="HORARIO"]').text
-        transporte = museum.find('atributos/atributo[@nombre="TRANSPORTE"]').text
+    for museum in root.iter('contenido'):
+        try:
+            nombre = museum.find('atributos/atributo[@nombre="NOMBRE"]').text
+            descripcion = museum.find('atributos/atributo[@nombre="DESCRIPCION-ENTIDAD"]').text
+            horario = museum.find('atributos/atributo[@nombre="HORARIO"]').text
+            transporte = museum.find('atributos/atributo[@nombre="TRANSPORTE"]').text
+            separador = ' - '
+            print(nombre, separador, descripcion, separador, horario, separador, transporte)
+        except AttributeError:
+            print('Could not parse ' + nombre)
+            continue
         # nombre = museum.find('{nombre}nombre')
         # print(name.text)
         # for char in actor.findall('{http://characters.example.com}character'):
