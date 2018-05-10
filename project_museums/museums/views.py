@@ -15,20 +15,16 @@ def other(self):
     museum_matrix = []
     museum_matrix = parser.parse_to_matrix(URL2, True)
     for raw in museum_matrix:
-        museum = DDBB.Museum(name = raw[0],
-                             description = raw[1],
-                             open_hours = raw[2],
-                             transport = raw[3],
-                             accessibility = raw[4],
-                             url = raw[5],
-                             address = raw[6],
-                             quarter = raw[7],
-                             district = raw[8],
-                             tlf_number = raw[9],
-                             email = raw[10])
+        museum = DDBB.Museum(name = raw[0],         description = raw[1],
+                             open_hours = raw[2],   transport = raw[3],
+                             url = str(raw[5]),     address = str(raw[6]),
+                             quarter = raw[7],      district = raw[8],
+                             tlf_number = raw[9],   email = raw[10],
+                             accessibility = int(raw[4]))
         print('Nombre = ' + raw[0])
         print('Accesibilidad = ' + str(raw[4]))
         print('Addderss = ' + raw[6])
+        print('URL = ' + raw[5])
         print('Email = ' + raw[10])
         print(museum)
         museum.save()
