@@ -7,6 +7,7 @@ from django.db import models
 
 class Museum(models.model):
     name = models.CharField(max_lenght=64)
+    description = models.TextField()
     open_hours = models.TextField()
     transport = models.TextField()
     accessibility = models.BooleanField()

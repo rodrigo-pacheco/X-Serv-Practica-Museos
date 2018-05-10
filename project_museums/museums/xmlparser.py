@@ -33,14 +33,12 @@ def ParseAndStore(source, itsurl):
 
 
     root = tree.getroot()
-    for museum in root.findall('contenido'):
-        itemlist = xmldoc.getElementsByTagName('item')
-        print(len(itemlist))
-        print(itemlist[0].attributes['name'].value)
-        for s in itemlist:
-    print(s.attributes['name'].value)
-        print(museum.tag, museum.attrib)
-        # name = museum.find('{nombre}nombre')
+    for museum in r.iter('contenido'):
+        nombre = museum.find('atributos/atributo[@nombre="NOMBRE"]').text
+        descripcion = museum.find('atributos/atributo[@nombre="DESCRIPCION-ENTIDAD"]').text
+        horario = museum.find('atributos/atributo[@nombre="HORARIO"]').text
+        transporte = museum.find('atributos/atributo[@nombre="TRANSPORTE"]').text
+        # nombre = museum.find('{nombre}nombre')
         # print(name.text)
         # for char in actor.findall('{http://characters.example.com}character'):
         #     print ' |-->', char.text
