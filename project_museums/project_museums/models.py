@@ -5,23 +5,24 @@
 from django.db import models
 
 
-class Museum(models.model):
-    name = models.CharField(max_lenght=64)
+class Museum(models.Model):
+    name = models.CharField(max_length=64)
     description = models.TextField()
     open_hours = models.TextField()
     transport = models.TextField()
     accessibility = models.BooleanField()
-    url = models.URLfield()
-    address = models.TextField)()
+    url = models.CharField()
+    address = models.TextField()
     quarter = models.CharField(max_length=12)
     district = models.CharField(max_length=12)
     tlf_number = models.CharField(max_length=128)
+    email = models.CharField(max_length=48)
 
     def __str__(self):
         return self.name
 
 
-class Comment(models.model):
+class Comment(models.Model):
     date = models.DateTimeField()
     text = models.TextFielf()
     museum = models.ForeingKey(Museum)
@@ -30,19 +31,19 @@ class Comment(models.model):
         return self.date
 
 
-class User(models.model):
-    name = models.CharField(max_lenght=12)
-    password = models.CharField(max_lenght=12)
+class User(models.Model):
+    name = models.CharField(max_length=12)
+    password = models.CharField(max_length=12)
     likes = models.ManyToManyField(Museum)
 
     def __str__(self):
         return self.name
 
 
-class Style(models.model):
-    title = models.CharField(max_lenght=64)
+class Style(models.Model):
+    title = models.CharField(max_length=64)
     text_size = models.IntegerField()                   # Could not be like this. To be revised
-    colour = models.CharField(max_lenght=12)            # Could not be like this. To be revised
+    colour = models.CharField(max_length=12)            # Could not be like this. To be revised
     user = models.OneToOneField(User, on_delete=models.CASCADE)     # If I delete a user I expect its Style to be deleted too
 
     def __str__(self):
