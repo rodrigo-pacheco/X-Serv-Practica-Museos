@@ -18,6 +18,7 @@ from urllib import request
 # django.core.exceptions.ImproperlyConfigured: Requested setting DEFAULT_INDEX_TABLESPACE, but settings are not configured. You must either define
 # the environment variable DJANGO_SETTINGS_MODULE or call settings.configure() before accessing settings.
 # I found this help to solve it here: https://stackoverflow.com/questions/8047204/django-script-to-access-model-objects-without-using-manage-py-shell
+# and here: https://stackoverflow.com/questions/15048963/alternative-to-the-deprecated-setup-environ-for-one-off-django-scripts
 
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")

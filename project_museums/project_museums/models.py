@@ -11,7 +11,7 @@ class Museum(models.Model):
     open_hours = models.TextField()
     transport = models.TextField()
     accessibility = models.BooleanField()
-    url = models.CharField()
+    url = models.CharField(max_length=128)
     address = models.TextField()
     quarter = models.CharField(max_length=12)
     district = models.CharField(max_length=12)
@@ -24,8 +24,8 @@ class Museum(models.Model):
 
 class Comment(models.Model):
     date = models.DateTimeField()
-    text = models.TextFielf()
-    museum = models.ForeingKey(Museum)
+    text = models.TextField()
+    museum = models.ForeignKey(Museum)
 
     def __str__(self):
         return self.date
