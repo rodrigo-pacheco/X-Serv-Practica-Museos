@@ -14,19 +14,32 @@ import xml.etree.ElementTree as ET
 from urllib import request
 
 
+import time
+
+
 def get_location_info(location):
     address, quarter, district = '', '', ''
     try:
-        address =  location.find('atributos/atributo[@nombre="CLASE-VIAL"]').text    + ' '
-        address += location.find('atributos/atributo[@nombre="NOMBRE-VIA"]').text    + ', '
-        address += location.find('atributos/atributo[@nombre="NUM"]').text           + '. CP:  '
-        address += location.find('atributos/atributo[@nombre="CODIGO-POSTAL"]').text + ' '
-        address += location.find('atributos/atributo[@nombre="LOCALIDAD"]').text
-        quarter = location.find('atributos/atributo[@nombre="BARRIO"]').text
-        district = location.find('atributos/atributo[@nombre="DISTRITO"]').text
+        address =  location.find('atributo[@nombre="CLASE-VIAL"]').text    + ' '
+        address += location.find('atributo[@nombre="NOMBRE-VIA"]').text    + ', '
+        address += location.find('atributo[@nombre="NUM"]').text           + '. CP:  '
+        address += location.find('atributo[@nombre="CODIGO-POSTAL"]').text + ' '
+        address += location.find('atributo[@nombre="LOCALIDAD"]').text
     except AttributeError:
-        print('Location could not be completed for ' + address + '/' + quarter + '/' + district)
-        return address, quarter, district
+        print('One of the filds for address could not be completed')
+        pass
+
+    try:
+        quarter = location.find('atributo[@nombre="BARRIO"]').text
+    except AttributeError:
+        print('Quarter information could not be filled')
+        pass
+
+    try:
+        district = location.find('atributo[@nombre="DISTRITO"]').text
+    except AttributeError:
+        print('District information could not be filled')
+        pass
 
     return address, quarter, district
 
@@ -34,8 +47,8 @@ def get_location_info(location):
 def get_contact_info(contact):
     email, telephone = '', ''
     try:
-        email = contact.find('atributos/atributo[@nombre="BARRIO"]').text
-        telephone = contact.find('atributos/atributo[@nombre="DISTRITO"]').text
+        email = contact.find('atributo[@nombre="EMAIL"]').text
+        telephone = contact.find('atributo[@nombre="TELEFONO"]').text
     except AttributeError:
         print('Email or phone could not be completed for ' + email + '/' + telephone)
         return email, telephone
@@ -68,14 +81,14 @@ def parse_to_matrix(source, itsurl):
             horario = museum.find('atributos/atributo[@nombre="HORARIO"]').text
             transporte = museum.find('atributos/atributo[@nombre="TRANSPORTE"]').text
             accesibilidad = museum.find('atributos/atributo[@nombre="ACCESIBILIDAD"]').text
-            if accesibilidad == 1:
+            if int(accesibilidad) == 1:
                 accesibilidad = True
             else:
                 accesibilidad = False
             web = museum.find('atributos/atributo[@nombre="CONTENT-URL"]').text
-            location = museum.find('atributos/atributo[@nombre="LOCALIZACION"]').text
+            location = museum.find('atributos/atributo[@nombre="LOCALIZACION"]')
             direccion, barrio, distrito = get_location_info(location)
-            contact = museum.find('atributos/atributo[@nombre="DATOSCONTACTOS"]').text
+            contact = museum.find('atributos/atributo[@nombre="DATOSCONTACTOS"]')
             email, telefono = get_contact_info(contact)
         except AttributeError:
             print('Could not parse ' + nombre)
