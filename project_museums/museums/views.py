@@ -5,10 +5,15 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.http import HttpResponseNotFound
 from django.db import IntegrityError
+from django.db import OperationalError
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 import museums.xmlparser as parser
 import museums.models as DDBB
-from django.utils import timezone
+
 
 URL1 = 'https://raw.githubusercontent.com/CursosWeb/CursosWeb.github.io/master/etc/201132-0-museos.xml'
 URL2 = 'https://datos.madrid.es/portal/site/egob/menuitem.ac61933d6ee3c31cae77ae7784f1a5a0/?vgnextoid=00149033f2201410VgnVCM100000171f5a0aRCRD&format=xml&file=0&filename=201132-0-museos&mgmtid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&preview=full'
@@ -35,22 +40,47 @@ def add_comment(comment, museum):
     museum.num_comments += 1
     museum.save()
 
+@csrf_exempt
 def slash(request):
-    # topcoments = get
-    # load_data()
-    # add_comment('ME gusta montonazo', DDBB.Museum.objects.get(name='Templo de Debod'))
-    # add_comment('A mirar las estrellas', DDBB.Museum.objects.get(name='Museo de la Guardia Civil'))
-    # try:
-    top_comments = (DDBB.Museum.objects.order_by('-num_comments')
-                        .values_list('num_comments', flat=True).distinct())
-    top_records = (DDBB.Museum.objects.order_by('-num_comments')
-                       .filter(num_comments__in=top_comments[:5]))
-    # for museo in top_comments:
-    #     print(museo)
+    if request.method == 'GET':
+        try:
+            if(len(DDBB.Museum.objects.all()) < 1):                                 # Check if DataBase is empty
+                return(HttpResponse(                                                # Help from http://www.echoecho.com/htmlforms07.htm
+                       """<form method=post accept-charset="utf-8">URL:<br>
+                          <input type="hidden" name="Load" value="DDBB">
+                          <input type="submit" value="Cargar BBDD"></form>"""))
+        #########################################################################################################################
+        ######################### Caso inicial en el que no se ha cargado la base de datos. Devolver opción de cargar #################################################
+        #########################################################################################################################
+        except OperationalError:                                                    # No DataBase at all
+            exit('No Data Base. Please run manage.py migrate')
 
-    for i in range(5):
-        print(i)
-        print(top_comments)
-        # if top_comments[i] > 0:
-            # print(top_records[i])
-    return(HttpResponse('hola'))
+        top_comments = (DDBB.Museum.objects.order_by('-num_comments')               # Help obtained from https://stackoverflow.com/questions/21106869/how-to-find-top-x-highest-values-in-column-using-django-queryset-without-cutting/21279059
+                        .values_list('num_comments', flat=True))                    # List with number of comments in decreasing order
+        top_records = (DDBB.Museum.objects.order_by('-num_comments')                # List of museums sorted by decreasing number of comments
+                       .filter(num_comments__in=top_comments[:5]))
+
+
+        museums_topcomments = []
+        for i in range(len(top_comments)):
+            if top_comments[i] > 0:
+                museums_topcomments.append(DDBB.Museum.objects
+                                          .get(name=top_records[i]))
+            elif i > 0:                                                             # 5 museums obtained already
+                break
+            else:
+                break
+
+        for i in range(len(museums_topcomments)):
+            print(museums_topcomments[i].name)
+        return(HttpResponse('hola'))
+
+    elif request.method == 'POST':
+        if request.POST["Load"] == 'DDBB':
+            load_data()
+            return(HttpResponseRedirect('/'))
+        elif request.POST["Load"] == 'accessibility':
+################################################################################
+            Se pide mostrar accesibilidad
+################################################################################
+            return(HttpResponseRedirect('/'))
