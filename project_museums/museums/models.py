@@ -3,18 +3,19 @@
 #  r.pachecom at alumnos dot urjc dot com
 
 from django.db import models
+from django.utils import timezone
 
 
 class Museum(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     description = models.TextField()
     open_hours = models.TextField()
     transport = models.TextField()
-    accessibility = models.IntegerField()
-    url = models.TextField()
+    accessibility = models.BooleanField()
+    url = models.CharField(max_length=256)
     address = models.TextField()
-    quarter = models.TextField()
-    district = models.TextField()
+    quarter = models.CharField(max_length=24)
+    district = models.CharField(max_length=24)
     tlf_number = models.CharField(max_length=128)
     email = models.CharField(max_length=48)
 
@@ -23,7 +24,7 @@ class Museum(models.Model):
 
 
 class Comment(models.Model):
-    date = models.DateTimeField()
+    date = models.DateTimeField(default=timezone.now)
     text = models.TextField()
     museum = models.ForeignKey(Museum)
 

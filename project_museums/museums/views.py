@@ -5,6 +5,7 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db import IntegrityError
 import museums.xmlparser as parser
 import museums.models as DDBB
 
@@ -20,12 +21,17 @@ def other(self):
                              url = str(raw[5]),     address = str(raw[6]),
                              quarter = raw[7],      district = raw[8],
                              tlf_number = raw[9],   email = raw[10],
-                             accessibility = int(raw[4]))
-        print('Nombre = ' + raw[0])
-        print('Accesibilidad = ' + str(raw[4]))
-        print('Addderss = ' + raw[6])
-        print('URL = ' + raw[5])
-        print('Email = ' + raw[10])
-        print(museum)
-        museum.save()
-    return(HttpResponse('Completado'))
+                             accessibility = raw[4])
+        # print('Nombre = ' + raw[0])
+        # print('Accesibilidad = ' + str(raw[4]))
+        # print('Addderss = ' + raw[6])
+        # print('URL = ' + raw[5])
+        # print('Email = ' + raw[10])
+        # print(museum)
+        try:
+            museum.save()
+        except IntegrityError:
+            print('Did not add ' + raw[0] + '. Already in DataBase')
+            continue
+
+    return(HttpResponse(DDBB.Museum.objects.get(name='Casón del Buen Retiro').accessibility))
