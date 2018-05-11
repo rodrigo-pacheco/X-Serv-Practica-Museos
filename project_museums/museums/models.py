@@ -18,18 +18,19 @@ class Museum(models.Model):
     district = models.CharField(max_length=24)
     tlf_number = models.CharField(max_length=128)
     email = models.CharField(max_length=48)
+    num_comments = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
 
 
 class Comment(models.Model):
-    date = models.DateTimeField(default=timezone.now)
+    date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     museum = models.ForeignKey(Museum)
 
     def __str__(self):
-        return self.date
+        return (self.museum.name + ' -> ' + str(self.date))
 
 
 class User(models.Model):
