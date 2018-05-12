@@ -62,18 +62,20 @@ def slash(request):
 
 
         museums_topcomments = []
+        added_museums = 0
         for i in range(len(top_comments)):
-            if top_comments[i] > 0:
+            added_museums += 1
+            if added_museums > 5:                                                   # 5 museums obtained already
+                break
+            elif top_comments[i] >= 0:
                 museums_topcomments.append(DDBB.Museum.objects
                                           .get(name=top_records[i]))
-            elif i > 0:                                                             # 5 museums obtained already
-                break
             else:
                 break
 
-        for i in range(len(museums_topcomments)):
-            print(museums_topcomments[i].name)
-        return(HttpResponse('hola'))
+        # for i in range(len(museums_topcomments)):
+        #     print(museums_topcomments[i].name)
+        # return(HttpResponse('hola'))
 
     elif request.method == 'POST':
         if request.POST["Load"] == 'DDBB':
@@ -81,6 +83,6 @@ def slash(request):
             return(HttpResponseRedirect('/'))
         elif request.POST["Load"] == 'accessibility':
 ################################################################################
-            Se pide mostrar accesibilidad
+#            Se pide mostrar accesibilidad
 ################################################################################
             return(HttpResponseRedirect('/'))
