@@ -11,12 +11,25 @@ from django.db import IntegrityError
 from django.db import OperationalError
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+
 import museums.xmlparser as parser
 import museums.models as DDBB
+
+from itertools import cycle
+accessIterator = cycle(['checked', ''])                                        # Help from https://stackoverflow.com/questions/10986970/python-how-to-toggle-between-two-values
 
 
 URL1 = 'https://raw.githubusercontent.com/CursosWeb/CursosWeb.github.io/master/etc/201132-0-museos.xml'
 URL2 = 'https://datos.madrid.es/portal/site/egob/menuitem.ac61933d6ee3c31cae77ae7784f1a5a0/?vgnextoid=00149033f2201410VgnVCM100000171f5a0aRCRD&format=xml&file=0&filename=201132-0-museos&mgmtid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&preview=full'
+
+
+ACCESSIBILITY = ''
+FORM_SLASH =  """ <form method=post accept-charset="utf-8">
+                  <input type="hidden" name="Load"   value="{}">
+                  <input type="hidden" name="Change" value="{}">
+                  {}
+                  </form>"""                                                            # Help from http://www.echoecho.com/htmlforms07.htm
+BUTTON = """<input type="radio" onclick="this.form.submit();" {}">"""                   # Help from: https://forums.digitalpoint.com/threads/html-checkbox-onclick-submit.1271195/
 
 def load_data():
     museum_matrix = []
@@ -42,13 +55,13 @@ def add_comment(comment, museum):
 
 @csrf_exempt
 def slash(request):
+    global ACCESSIBILITY
+    global FORM_SLASH
     if request.method == 'GET':
         try:
             if(len(DDBB.Museum.objects.all()) < 1):                                 # Check if DataBase is empty
-                return(HttpResponse(                                                # Help from http://www.echoecho.com/htmlforms07.htm
-                       """<form method=post accept-charset="utf-8">URL:<br>
-                          <input type="hidden" name="Load" value="DDBB">
-                          <input type="submit" value="Cargar BBDD"></form>"""))
+                return(HttpResponse(FORM_SLASH.format(
+                       'DDBB', '_', '<input type="submit" value="Cargar BBDD">')))
         #########################################################################################################################
         ######################### Caso inicial en el que no se ha cargado la base de datos. Devolver opción de cargar #################################################
         #########################################################################################################################
@@ -73,16 +86,26 @@ def slash(request):
             else:
                 break
 
+        print('Accesibilidad: ' + ACCESSIBILITY)
+        return(HttpResponse('Accesibilidad: ' +
+               FORM_SLASH.format('_', 'accessibility', BUTTON.format(ACCESSIBILITY))))
+################################################################################
+#            Botón para accesibilidad
+################################################################################
         # for i in range(len(museums_topcomments)):
         #     print(museums_topcomments[i].name)
         # return(HttpResponse('hola'))
 
     elif request.method == 'POST':
-        if request.POST["Load"] == 'DDBB':
+        print(request.POST)
+        if request.POST['Load'] == 'DDBB':
             load_data()
             return(HttpResponseRedirect('/'))
-        elif request.POST["Load"] == 'accessibility':
-################################################################################
-#            Se pide mostrar accesibilidad
-################################################################################
+        elif request.POST['Change'] == 'accessibility':
+            ACCESSIBILITY = next(accessIterator)
             return(HttpResponseRedirect('/'))
+        else:
+            return(HttpResponseRedirect('/'))
+################################################################################
+#            Redirigir a Página nula
+################################################################################
