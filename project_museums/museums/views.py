@@ -16,7 +16,7 @@ import museums.xmlparser as parser
 import museums.models as DDBB
 
 from itertools import cycle
-accessIterator = cycle(['checked', ''])                                        # Help from https://stackoverflow.com/questions/10986970/python-how-to-toggle-between-two-values
+accessIterator = cycle(['checked="True"', ''])  # Show checkbox checked or not          # Help from https://stackoverflow.com/questions/10986970/python-how-to-toggle-between-two-values and https://stackoverflow.com/questions/12700626/what-is-the-proper-way-to-check-and-uncheck-a-checkbox-in-html5
 
 
 URL1 = 'https://raw.githubusercontent.com/CursosWeb/CursosWeb.github.io/master/etc/201132-0-museos.xml'
