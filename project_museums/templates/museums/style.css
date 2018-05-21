@@ -48,14 +48,38 @@ h2 {
   color:#fff;
   font-size:85%;
   text-align:right;
-  background:#333 url(../img/tlcorner.gif) top left no-repeat;
+  background:#333;
+}
+
+#user_login {
+    float: right;
+    width: 220px;
+    height: 120px;
+    background-color: LightSkyBlue;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid DarkBlue;
+    border-radius: 10px;
+    padding:4px;
+}
+
+#user_login input {
+    margin: 2px;
+    float: right;
+}
+
+#user_login a {
+    margin: 2px;
+    float: right;
+    padding: 10px;
+    height: 20px;
 }
 
 #header {
 	height:80px;
   margin:0;
   padding:30px 20px;
-	background:#666  url(../img/headerbg.gif) bottom right no-repeat;
+	background:#666  url(../img/header.gif) bottom right no-repeat;
   color:#fff;
   font-size:95%;
   text-align:left;
@@ -100,7 +124,7 @@ h2 {
 	padding:3px 0px;
 }
 
-#sidebar a, 
+#sidebar a,
 #content a
 {
   color:#555;
@@ -129,7 +153,7 @@ h2 {
 #footer {
   clear:both;
   padding: 5px 10px;
-  background:#333 url(../img/brcorner.gif) bottom right no-repeat;
+  background:#333;
   color:#fff;
   font-family: Verdana, sans-serif;
   font-size:85%;
@@ -172,7 +196,7 @@ h2 {
 
 #nav li a:hover {
 	background:#555;
-  color:#fff; 
+  color:#fff;
 }
 
 
@@ -181,7 +205,7 @@ h2 {
 #contact #contactnav
 {
 color:#fff;
-background:#555; 
+background:#555;
 }
 
 
@@ -213,4 +237,3 @@ ul { margin: 0; padding : 0; list-style : none; }
 #sidebarnav li a:hover {
 	background:#999;
 }
-

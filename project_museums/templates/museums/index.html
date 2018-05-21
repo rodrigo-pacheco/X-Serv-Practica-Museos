@@ -12,11 +12,29 @@
 <div id="container">
 
     <div id="watermark">
-         <p>your homepage url</p>
+         <p>Created by Rodrigo Pacheco</p>
     </div>
 
     <div id="header">
          <h1>Museos de Madrid</h1>
+         <div id="banner">      <!-- Help from: https://docs.djangoproject.com/en/1.11/howto/static-files/ -->
+             {% load static %}
+             <img src="{% static "banner.jpg" %}" alt="Banner"/>
+         </div>
+    </div>
+
+    <div id="user_login">
+        {% if aut %}
+            <h3> Bienvenido {{ name }}</h3>
+            <a class="boton" href="logout">Logout</a>
+        {% else %}
+            <form method="post" action="login">
+                <input class="textbox" type="text" name="username" placeholder="Username">
+                <input class="textbox" type="password" name="password" placeholder="Contraseña">
+                <a class="boton" href="registro">Registrarse</a>
+                <input class="boton" type="submit" value="Login">
+            </form>
+        {% endif %}
     </div>
 
     <ul id="nav">
@@ -33,49 +51,22 @@
         </ul>
     </div>
 
-		<div id="content">
-
-     <h1>Content</h1>
-     <p>
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-        Sed ultrices risus sit amet lectus. Cras vulputate augue in enim.
-        Cras feugiat diam non odio suscipit rutrum. Nullam quam arcu,
-        tincidunt eget, varius ac, semper non, massa.
-
-        Sed lorem leo,
-        gravida ut, mattis vitae, suscipit id, enim. Sed ac metus et
-        lectus semper varius. Morbi posuere rutrum ante. Etiam ac purus.
-        Sed mattis aliquam tortor. Duis facilisis tellus placerat lorem.
-     </p>
-     <h2>Content</h2>
-     <p>
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
-        Sed ultrices risus sit amet lectus. Cras vulputate augue in enim.
-        Cras feugiat diam non odio suscipit rutrum. Nullam quam arcu,
-        tincidunt eget, varius ac, semper non, massa.
-
-        Sed lorem leo,
-        gravida ut, mattis vitae, suscipit id, enim. Sed ac metus et
-        lectus semper varius. Morbi posuere rutrum ante. Etiam ac purus.
-        Sed mattis aliquam tortor. Duis facilisis tellus placerat lorem.
-     </p>
-
-		</div>
-
-    <div id="ads">
-         <p>Space reserved for text advertisements</p>
-    </div>
+	<div id="content">
+        {% block content %}{% endblock %}
+	</div>
 
     <div id="footer">
-        <p>
-        <a href="#">Privacy</a> | <a href="#">Terms</a>
+        <p> Este sitio usa datos del
+        <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default">
+           ayuntamiento de Madrid</a> . Aquí puede encontrar su
+        <a  href="https://datos.madrid.es/FWProjects/egob/Catalogo/Empleo/Ficheros/Estructura_DS_ConjuntoDatos_OFICINA_EMPLEO.pdf">explicación</a>
         </p>
 
         <p>
         Valid <a href="http://validator.w3.org/check?uri=referer">XHTML</a> | Valid <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>
         </p>
 
-        <p>&copy; 2007 your copyphrase | template design by <a href="http://www.webtom.be">webtom.be</a></p>
+        <p>&copy; 2018 Rodrigo Pacheco | template design by <a href="http://www.webtom.be">webtom.be</a></p>
     </div>
 
 
