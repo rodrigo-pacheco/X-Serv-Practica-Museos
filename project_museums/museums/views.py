@@ -11,6 +11,7 @@ from django.db import IntegrityError
 from django.db import OperationalError
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from django.template import loader
 
 import museums.xmlparser as parser
 import museums.models as DDBB
@@ -55,6 +56,8 @@ def add_comment(comment, museum):
 
 @csrf_exempt
 def slash(request):
+    template = loader.get_template('museums/index.html')
+    return(HttpResponse(template.render()))
     global ACCESSIBILITY
     global FORM_SLASH
     if request.method == 'GET':
