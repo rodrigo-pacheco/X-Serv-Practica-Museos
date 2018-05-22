@@ -29,8 +29,9 @@ accessibilityDic = {True: 'checked="True"',
                     False: ''}                                                  # Show checkbox checked or not
 
 ACCESSIBILITY = False
+DISTRICT = 'TODOS'
 
-USER_WEB = """<p><a href={} > {} </a> {} </p><hr>"""
+USER_WEB = """<p><a href={} >{}</a> {} </p><hr>"""
 
 def add_comment(comment, museum):
     DDBB.Comment(text = comment, museum=museum).save()
@@ -48,12 +49,12 @@ def get_user_webs():
             pass
         if title == '':                                                         # '' is default value
             users_webs += USER_WEB.format('/' + str(user.id,),
-                                         'Página de ' + str(user.username),
-                                         '')
+                                          'Página de ' + str(user.username),
+                                          '')
         else:
             users_webs += USER_WEB.format('/' + str(user.id,),
-                                         title,
-                                         ' por ' + str(user.username))
+                                          title,
+                                          '  por ' + str(user.username))
     return users_webs
 
 
@@ -82,8 +83,8 @@ def slash(request):
             template = get_template('museums/slash.html')
         except NameError:
             exit('Server stopped working. Template missing')
+
         button_status = accessibilityDic[ACCESSIBILITY]                         # Get string to check button or nor
-        print(DDBB.User.objects.all())
         context = Context({'aut': request.user.is_authenticated(),
                            'name': request.user.username,
                            'users': get_user_webs(),
@@ -145,6 +146,47 @@ def my_login(request):
         return(HttpResponseRedirect('/'))
     else:
         return(HttpResponseRedirect('/'))
+
+
+def get_museum_list(district):
+    try:
+        museum_selection = DDBB.Museum.objects.filter(district=district)
+    except DDBB.Museum.DoesNotExist:
+        museum_selection = []
+    if district == 'TODOS':
+        museum_selection = DDBB.Museum.objects.all()
+    return(museum_selection)
+
+
+def get_district_names():
+    districts = ['TODOS']
+    for museum in DDBB.Museum.objects.all():
+        if museum.district not in districts:
+            districts.append(museum.district)
+    return(districts)
+
+
+@csrf_exempt
+def museums(request):
+    global DISTRICT
+    if request.method == 'GET':
+        try:
+            template = get_template('museums/museums.html')
+        except NameError:
+            exit('Server stopped working. Template missing')
+
+        context = Context({'aut': request.user.is_authenticated(),
+                           'name': request.user.username,
+                           'users': get_user_webs(),
+                           'districts': get_district_names(),
+                           'museums': get_museum_list(DISTRICT)})
+        return(HttpResponse(template.render(context)))
+
+    if request.method == 'POST':
+        print(DISTRICT)
+        DISTRICT = request.POST['District']
+        print(DISTRICT)
+        return(HttpResponseRedirect('/museos'))
 
 
 def not_found(request):

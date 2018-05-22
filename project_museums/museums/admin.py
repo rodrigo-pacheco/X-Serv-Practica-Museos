@@ -10,6 +10,4 @@ from .models import Style
 admin.site.register(Museum)
 admin.site.register(Comment)
 admin.site.register(Style)
-
-
 # admin.site.register(Like)

@@ -38,6 +38,14 @@ h2 {
     display: inline-block;
 }
 
+#content h3 {
+	padding:0;
+    margin:20px 0px 0 0;
+	font-family: "Trebuchet MS", Verdana, Sans-Serif;
+    font-size:190%;
+    font-weight:normal;
+}
+
 #container {
 	width: auto;
 	margin: auto;
@@ -143,7 +151,12 @@ h2 {
     font-size:75%;
 }
 
-#sidebar a,
+#sidebar a{
+    color: #717fea;
+	text-decoration:underline;
+    font-size:120%;
+}
+
 #content a
 {
     color: blue;

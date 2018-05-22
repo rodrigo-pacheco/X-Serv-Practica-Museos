@@ -1,0 +1,29 @@
+{% extends "museums/base.html" %}
+{% block content %}
+
+    <section>
+        <ul>
+            <h2>Seleccione distrito:</h2>
+            <form name=district method="post">
+                <select name="District">
+                    {% for district in districts %}
+                        <option value="{{ district }}">{{ district }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" value="Cambiar distrito">                  <!-- Help from: https://www.w3schools.com/tags/att_option_value.asp -->
+            </form>
+        </ul>
+
+        <h1>Museos del distrito seleccionado</h1>
+        {% for museum in museums %}
+            <div></br>
+            <h3> {{ museum.name }} </h3>
+            <a href="{{ museum.url }}">Más información en web oficial</a></br>
+            <a href="museos/{{ museum.id }}">Mas información (en esta web)</a></br>
+            <hr>
+            </div>
+        {% endfor %}
+
+    </section>
+
+{% endblock %}
