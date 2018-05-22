@@ -1,10 +1,14 @@
 {% extends "museums/base.html" %}
 {% block content %}
+
     <section class='all_page'>
         <h2>Aún no hay datos</h2>
         <p>Pulse para cargar la Base de Datos: </p>
         <form method=post accept-charset='utf-8'>
         <input type='hidden' name='Load'   value='DDBB'>
         <input class='boton' type='submit' value='Cargar BBDD'> </p>
+        <p>Sea paciente, este proceso puede tardar unos segundos.
+           Cuando finalice será redirigido a la página principal.</p>
     </section>
+
 {% endblock %}

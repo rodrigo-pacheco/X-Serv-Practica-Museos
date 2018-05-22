@@ -28,28 +28,6 @@ URL2 = 'https://datos.madrid.es/portal/site/egob/menuitem.ac61933d6ee3c31cae77ae
 
 ACCESSIBILITY = False
 
-def load_data():
-    museum_matrix = []
-    museum_matrix = parser.parse_to_matrix(URL2, True)
-    for raw in museum_matrix:
-        museum = DDBB.Museum(name = raw[0],         description = raw[1],
-                             open_hours = raw[2],   transport = raw[3],
-                             url = str(raw[5]),     address = str(raw[6]),
-                             quarter = raw[7],      district = raw[8],
-                             tlf_number = raw[9],   email = raw[10],
-                             accessibility = raw[4])
-        try:
-            museum.save()
-        except IntegrityError:
-            print('Did not add ' + raw[0] + '. Already in DataBase')
-            continue
-    return True
-
-def add_comment(comment, museum):
-    DDBB.Comment(text = comment, museum=museum).save()
-    museum.num_comments += 1
-    museum.save()
-
 @csrf_exempt
 def slash(request):
     # template = loader.get_template('museums/index.html')
@@ -110,21 +88,51 @@ def slash(request):
 ################################################################################
 #            Redirigir a Página nula
 ################################################################################
+def load_data():
+    museum_matrix = []
+    museum_matrix = parser.parse_to_matrix(URL2, True)
+    for raw in museum_matrix:
+        museum = DDBB.Museum(name = raw[0],         description = raw[1],
+                             open_hours = raw[2],   transport = raw[3],
+                             url = str(raw[5]),     address = str(raw[6]),
+                             quarter = raw[7],      district = raw[8],
+                             tlf_number = raw[9],   email = raw[10],
+                             accessibility = raw[4])
+        try:
+            museum.save()
+        except IntegrityError:
+            print('Did not add ' + raw[0] + '. Already in DataBase')
+            continue
+    return True
+
+
+def add_comment(comment, museum):
+    DDBB.Comment(text = comment, museum=museum).save()
+    museum.num_comments += 1
+    museum.save()
+
+
 @csrf_exempt
 def load_DDBB(request):
-    print('Im in load')
     if request.method == 'GET':
         try:
             template = get_template('museums/loadDDBB.html')
         except NameError:
-            print('Server stopped working. Template missing')
-        print('Después de except')
-        context = Context({'aut': False,                ################################################### CAMBIAR #########################################
-                           'sidebar': '<p<Hola</p>'})          ################################################### CAMBIAR #########################################
+            exit('Server stopped working. Template missing')
+        context = Context({'aut': False})                ################################################### CAMBIAR #########################################
         return(HttpResponse(template.render(context)))
     elif request.method == 'POST':
         print(request.POST)
         if request.POST['Load'] == 'DDBB':
-            # load_data()
-            # return(HttpResponseRedirect('/'))
-            return(HttpResponseRedirect('/load'))
+            load_data()
+            return(HttpResponseRedirect('/'))
+
+
+
+def not_found(request):
+    try:
+        template = get_template('museums/not_found.html')
+    except NameError:
+        exit('Server stopped working. Template missing')
+    context = Context({'aut': False})                ################################################### CAMBIAR #########################################
+    return(HttpResponse(template.render(context)))

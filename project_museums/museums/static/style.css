@@ -78,7 +78,7 @@ h2 {
     float: left;
     padding: auto;
     height: auto;
-    font-size:70%;
+    font-size:40%;
 }
 
 #header {
@@ -119,7 +119,7 @@ h2 {
     width:auto;
     height:auto;
     padding:15px;
-     /* background:#ccc;        /* Change this to change backgorund */ 
+     /* background:#ccc;        /* Change this to change backgorund */
     font-size:150%;
     margin-left: 200px;
     margin-top: 15px;

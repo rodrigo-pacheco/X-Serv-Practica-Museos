@@ -43,7 +43,15 @@
     </ul>
 
     <div id="sidebar">
-        {% block sidebar %}{% endblock %}
+        {% if aut %}
+            <h3> Bienvenido {{ name }}</h3>
+            <a class="boton" href="logout">Logout</a>
+            <!-- METER PAGINAS DE USUARUIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO -->
+        {% else %}
+            <h2>Aún no hay páginas de usuario</h2>
+            <p>¡Autentícate para ser el primero en tener una!</p>
+        {% endif %}
+        <!-- {% block sidebar %}{% endblock %} -->
         <!-- <h1>Menu</h1>
         <ul id="sidebarnav">
             <li><a href="#">a link</a></li>
