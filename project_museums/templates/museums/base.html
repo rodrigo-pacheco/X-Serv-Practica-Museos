@@ -15,6 +15,7 @@
          <p>Created by Rodrigo Pacheco</p>
     </div>
 
+
     <div id="header">
         <div id="user_login" style="float:right">
             {% if aut %}
@@ -30,11 +31,12 @@
             {% endif %}
         </div>
          <h1>Museos de Madrid</h1>
-         <div id="banner">      <!-- Help from: https://docs.djangoproject.com/en/1.11/howto/static-files/ -->
+         <div id="banner">                                                      <!-- Help from: https://docs.djangoproject.com/en/1.11/howto/static-files/ -->
              {% load static %}
              <img src="{% static "banner.jpg" %}" alt="Banner"/>
          </div>
     </div>
+
 
     <ul id="nav">
         <li><a id="homenav" href="/">Inicio</a></li>
@@ -42,28 +44,19 @@
         <li><a id="contactnav" href="/about">About</a></li>
     </ul>
 
+
     <div id="sidebar">
-        {% if aut %}
-            <h3> Bienvenido {{ name }}</h3>
-            <a class="boton" href="logout">Logout</a>
-            <!-- METER PAGINAS DE USUARUIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO -->
-        {% else %}
-            <h2>Aún no hay páginas de usuario</h2>
-            <p>¡Autentícate para ser el primero en tener una!</p>
-        {% endif %}
-        <!-- {% block sidebar %}{% endblock %} -->
-        <!-- <h1>Menu</h1>
-        <ul id="sidebarnav">
-            <li><a href="#">a link</a></li>
-            <li><a href="#">another link</a></li>
-        </ul> -->
+
+        <h3>Páginas de usuarios</h3>
+        {{ users|safe }}                                                        <!-- Help from: 'safe: Marks a string as not requiring further HTML escaping prior to output. When autoescaping is off, this filter has no effect.' https://djangobook.com/builtin-template-tags-filters/-->
+
     </div>
 
+
 	<div id="content">
-        <!-- <h2> Esto es un ejemplo </h2>
-        <!-- <p> De lo que es un párrafo </p> -->
         {% block content %}{% endblock %}
 	</div>
+
 
     <div id="footer">
         <p> Este sitio usa datos del

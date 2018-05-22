@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.template.loader import get_template
 from django.template import Context
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 
 import museums.xmlparser as parser
 import museums.models as DDBB
@@ -29,11 +30,31 @@ accessibilityDic = {True: 'checked="True"',
 
 ACCESSIBILITY = False
 
+USER_WEB = """<p><a href={} > {} </a> {} </p><hr>"""
 
 def add_comment(comment, museum):
     DDBB.Comment(text = comment, museum=museum).save()
     museum.num_comments += 1
     museum.save()
+
+
+def get_user_webs():
+    users_webs = ''
+    for user in User.objects.all():
+        title = ''
+        try:
+            title = DDBB.Style.objects.get(user__username=user.username).title
+        except DDBB.Style.DoesNotExist:
+            pass
+        if title == '':                                                         # '' is default value
+            users_webs += USER_WEB.format('/' + str(user.id,),
+                                         'Página de ' + str(user.username),
+                                         '')
+        else:
+            users_webs += USER_WEB.format('/' + str(user.id,),
+                                         title,
+                                         ' por ' + str(user.username))
+    return users_webs
 
 
 def museums_top_comments():
@@ -57,23 +78,21 @@ def slash(request):
             exit('No Data Base. Please run manage.py migrate')
 
         top_museums = museums_top_comments()
-        print(str(ACCESSIBILITY))
         try:
             template = get_template('museums/slash.html')
         except NameError:
             exit('Server stopped working. Template missing')
-        print(top_museums)
         button_status = accessibilityDic[ACCESSIBILITY]                         # Get string to check button or nor
+        print(DDBB.User.objects.all())
         context = Context({'aut': request.user.is_authenticated(),
                            'name': request.user.username,
+                           'users': get_user_webs(),
                            'accessible': button_status,
                            'museums': top_museums})
         return(HttpResponse(template.render(context)))
 
     elif request.method == 'POST':
-        print(request.POST)
         if request.POST['Change'] == 'accessibility':
-            print('A cambiar')
             ACCESSIBILITY = not ACCESSIBILITY
             return(HttpResponseRedirect('/'))
         else:
@@ -105,10 +124,12 @@ def load_DDBB(request):
             template = get_template('museums/loadDDBB.html')
         except NameError:
             exit('Server stopped working. Template missing')
+
         context = Context({'aut': request.user.is_authenticated(),
-                           'name': request.user.username})
+                           'name': request.user.username,
+                           'users': get_user_webs()})
+        return(HttpResponse(template.render(context)))
     elif request.method == 'POST':
-        print(request.POST)
         if request.POST['Load'] == 'DDBB':
             load_data()
             return(HttpResponseRedirect('/'))
@@ -132,5 +153,6 @@ def not_found(request):
     except NameError:
         exit('Server stopped working. Template missing')
     context = Context({'aut': request.user.is_authenticated(),
-                       'name': request.user.username})
+                       'name': request.user.username,
+                       'users': get_user_webs()})
     return(HttpResponse(template.render(context)))

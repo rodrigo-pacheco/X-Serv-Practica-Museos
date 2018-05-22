@@ -146,7 +146,7 @@ h2 {
 #sidebar a,
 #content a
 {
-    color:#555;
+    color: blue;
 	text-decoration:underline;
     font-size:120%;
 }

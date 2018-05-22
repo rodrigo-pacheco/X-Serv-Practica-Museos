@@ -4,6 +4,7 @@
 
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Museum(models.Model):
@@ -33,20 +34,20 @@ class Comment(models.Model):
         return (self.museum.name + ' -> ' + str(self.date))
 
 
-class User(models.Model):
-    name = models.CharField(max_length=12)
-    password = models.CharField(max_length=12)
-    likes = models.ManyToManyField(Museum)
-
-    def __str__(self):
-        return self.name
+# class Like(models.Model):
+#     date = models.DateTimeField(auto_now_add=True)
+#     user = models.ForeignKey(User)
+#     museum = models.ForeignKey(Museum)
+#
+#     def __str__(self):
+#         return (self.museum.name + ' -> ' + str(self.date))
 
 
 class Style(models.Model):
-    title = models.CharField(max_length=64)
-    text_size = models.IntegerField()                   # Could not be like this. To be revised
-    colour = models.CharField(max_length=12)            # Could not be like this. To be revised
-    user = models.OneToOneField(User, on_delete=models.CASCADE)     # If I delete a user I expect its Style to be deleted too
+    title = models.CharField(max_length=128, default='')
+    text_size = models.IntegerField()                                           # Could not be like this. To be revised
+    colour = models.CharField(max_length=12)                                    # Could not be like this. To be revised
+    user = models.ForeignKey(User, on_delete=models.CASCADE)                    # If I delete a user I expect its Style to be deleted too
 
-    def __str__(self):
-        return (self.title + self.user)
+    # def __str__(self):
+    #     return (self.title + self.user)
