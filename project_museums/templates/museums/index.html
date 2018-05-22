@@ -3,7 +3,7 @@
 
 <head>
 <!-- <link rel="stylesheet" type="text/css" href="css/style.css" /> -->
-<link href="style.css" rel="stylesheet" type="text/css">
+<link href="/static/style.css" rel="stylesheet" type="text/css">
 <title>webtom grey</title>
 </head>
 
@@ -16,25 +16,24 @@
     </div>
 
     <div id="header">
+        <div id="user_login" style="float:right">
+            {% if aut %}
+                <h3> Bienvenido {{ name }}</h3>
+                <a class="boton" href="logout">Logout</a>
+            {% else %}
+                <form method="post" action="login">
+                    <input class="textbox" type="text" name="username" placeholder="Username">
+                    <input class="textbox" type="password" name="password" placeholder="Contraseña">
+                    <a class="boton" href="register">Registrarse</a>
+                    <input class="boton" type="submit" value="Login">
+                </form>
+            {% endif %}
+        </div>
          <h1>Museos de Madrid</h1>
          <div id="banner">      <!-- Help from: https://docs.djangoproject.com/en/1.11/howto/static-files/ -->
              {% load static %}
              <img src="{% static "banner.jpg" %}" alt="Banner"/>
          </div>
-    </div>
-
-    <div id="user_login">
-        {% if aut %}
-            <h3> Bienvenido {{ name }}</h3>
-            <a class="boton" href="logout">Logout</a>
-        {% else %}
-            <form method="post" action="login">
-                <input class="textbox" type="text" name="username" placeholder="Username">
-                <input class="textbox" type="password" name="password" placeholder="Contraseña">
-                <a class="boton" href="registro">Registrarse</a>
-                <input class="boton" type="submit" value="Login">
-            </form>
-        {% endif %}
     </div>
 
     <ul id="nav">
@@ -52,13 +51,15 @@
     </div>
 
 	<div id="content">
-        {% block content %}{% endblock %}
+        <h2> Esto es un ejemplo </h2>
+        <p> De lo que es un párrafo </p>
+        <!-- {% block content %}{% endblock %} -->
 	</div>
 
     <div id="footer">
         <p> Este sitio usa datos del
         <a href="https://datos.madrid.es/portal/site/egob/menuitem.c05c1f754a33a9fbe4b2e4b284f1a5a0/?vgnextoid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&vgnextchannel=374512b9ace9f310VgnVCM100000171f5a0aRCRD&vgnextfmt=default">
-           ayuntamiento de Madrid</a> . Aquí puede encontrar su
+           ayuntamiento de Madrid</a> - Aquí puede encontrar su
         <a  href="https://datos.madrid.es/FWProjects/egob/Catalogo/Empleo/Ficheros/Estructura_DS_ConjuntoDatos_OFICINA_EMPLEO.pdf">explicación</a>
         </p>
 
