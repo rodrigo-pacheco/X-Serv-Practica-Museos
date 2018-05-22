@@ -35,6 +35,7 @@ h2 {
 	font-family: "Trebuchet MS", Verdana, Sans-Serif;
     font-size:140%;
     font-weight:normal;
+    display: inline-block;
 }
 
 #container {

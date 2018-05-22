@@ -1,15 +1,14 @@
-{% extends "base.html" %}
+{% extends "museums/base.html" %}
 {% block content %}
     <section>
-        <form method=post accept-charset="utf-8">
-        <input type="hidden" name="Load"   value="{}">
-        <input type="hidden" name="Change" value="{}">
-        {}
-        </form>"""                                                            # Help from http://www.echoecho.com/htmlforms07.htm
-        BUTTON = """<input type="radio" onclick="this.form.submit();" {}">"""                   # Help from: https://forums.digitalpoint.com/threads/html-checkbox-onclick-submit.1271195/
+        <div><h2>Mostrar accesibles:
+            <form method=post accept-charset='utf-8'>
+                <input type='hidden' name='Change'   value='accessibility'>
+                <input type='radio' onclick='this.form.submit();' {{accessible}}>              <!-- Help from: https://forums.digitalpoint.com/threads/html-checkbox-onclick-submit.1271195/ -->
+            </form>
+        </h2></div>
 
-
-            <form id="accesibles" method="post">
+            <!-- <form id="accesibles" method="post">
                 <input class="boton" type="submit" value="Accesibles">
             </form>
             <h1>Aparcamientos con más comentarios</h1>
@@ -18,7 +17,7 @@
             <p> Dirección: {{ aparcamiento.direccion }}</p>
             <a href="aparcamientos/{{ aparcamiento.id }}">Mas información</a></br>
             <hr>
-        {% endfor %}
+        {% endfor %} -->
     </section>
 
 {% endblock %}

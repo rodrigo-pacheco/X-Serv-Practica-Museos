@@ -18,76 +18,72 @@ import museums.xmlparser as parser
 import museums.models as DDBB
 
 from itertools import cycle
-accessibilityDic = {True: 'checked="True"',
-                    False: ''} #cycle([, ''])  # Show checkbox checked or not          # Help from https://stackoverflow.com/questions/10986970/python-how-to-toggle-between-two-values and https://stackoverflow.com/questions/12700626/what-is-the-proper-way-to-check-and-uncheck-a-checkbox-in-html5
 
 
 URL1 = 'https://raw.githubusercontent.com/CursosWeb/CursosWeb.github.io/master/etc/201132-0-museos.xml'
 URL2 = 'https://datos.madrid.es/portal/site/egob/menuitem.ac61933d6ee3c31cae77ae7784f1a5a0/?vgnextoid=00149033f2201410VgnVCM100000171f5a0aRCRD&format=xml&file=0&filename=201132-0-museos&mgmtid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&preview=full'
 
+accessibilityDic = {True: 'checked="True"',
+                    False: ''}                                                  # Show checkbox checked or not
 
 ACCESSIBILITY = False
 
+
+def add_comment(comment, museum):
+    DDBB.Comment(text = comment, museum=museum).save()
+    museum.num_comments += 1
+    museum.save()
+
+
+def museums_top_comments():
+    top_comments = (DDBB.Museum.objects.order_by('-num_comments')               # Help obtained from https://stackoverflow.com/questions/21106869/how-to-find-top-x-highest-values-in-column-using-django-queryset-without-cutting/21279059
+                    .values_list('num_comments', flat=True))                    # List with number of comments in decreasing order
+    top_records = (DDBB.Museum.objects.order_by('-num_comments')                # List of museums sorted by decreasing number of comments
+                   .filter(num_comments__in=top_comments[:5]))
+
+    museums_topcomments = []
+    for i in range(5):
+        if top_comments[i] > 0:
+            museums_topcomments.append(DDBB.Museum.objects
+                                      .get(name=top_records[i]))
+        else:
+            break
+    return museums_topcomments
+
+
 @csrf_exempt
 def slash(request):
-    # template = loader.get_template('museums/index.html')
-    # return(HttpResponse(template.render()))
     global ACCESSIBILITY
-    global FORM_SLASH
+
     if request.method == 'GET':
         try:
-            if(len(DDBB.Museum.objects.all()) < 1):                                 # Check if DataBase is empty
-                print('DDBB is empty')
+            if(len(DDBB.Museum.objects.all()) < 1):                             # Check if DataBase is empty
                 return(HttpResponseRedirect('/load'))
-                return(HttpResponse(FORM_SLASH.format(
-                       'DDBB', '_', '<input type="submit" value="Cargar BBDD">')))
-        #########################################################################################################################
-        ######################### Caso inicial en el que no se ha cargado la base de datos. Devolver opción de cargar #################################################
-        #########################################################################################################################
-        except OperationalError:                                                    # No DataBase at all
+        except OperationalError:                                                # No DataBase at all
             exit('No Data Base. Please run manage.py migrate')
 
-        top_comments = (DDBB.Museum.objects.order_by('-num_comments')               # Help obtained from https://stackoverflow.com/questions/21106869/how-to-find-top-x-highest-values-in-column-using-django-queryset-without-cutting/21279059
-                        .values_list('num_comments', flat=True))                    # List with number of comments in decreasing order
-        top_records = (DDBB.Museum.objects.order_by('-num_comments')                # List of museums sorted by decreasing number of comments
-                       .filter(num_comments__in=top_comments[:5]))
+        top_museums = museums_top_comments()
+        print(str(ACCESSIBILITY))
+        try:
+            template = get_template('museums/slash.html')
+        except NameError:
+            exit('Server stopped working. Template missing')
 
-
-        museums_topcomments = []
-        added_museums = 0
-        for i in range(len(top_comments)):
-            added_museums += 1
-            if added_museums > 5:                                                   # 5 museums obtained already
-                break
-            elif top_comments[i] >= 0:
-                museums_topcomments.append(DDBB.Museum.objects
-                                          .get(name=top_records[i]))
-            else:
-                break
-
-        print('Accesibilidad: ' + str(ACCESSIBILITY))
-        return(HttpResponse('Accesibilidad: ' +
-               FORM_SLASH.format('_', 'accessibility', BUTTON.format(accessibilityDic[ACCESSIBILITY]))))
-################################################################################
-#            Botón para accesibilidad
-################################################################################
-        # for i in range(len(museums_topcomments)):
-        #     print(museums_topcomments[i].name)
-        # return(HttpResponse('hola'))
+        button_status = accessibilityDic[ACCESSIBILITY]                         # Get string to check button or nor
+        context = Context({'aut': False,       ################################################### CAMBIAR #########################################
+                           'accessible': button_status})
+        return(HttpResponse(template.render(context)))
 
     elif request.method == 'POST':
         print(request.POST)
-        if request.POST['Load'] == 'DDBB':
-            load_data()
-            return(HttpResponseRedirect('/'))
-        elif request.POST['Change'] == 'accessibility':
+        if request.POST['Change'] == 'accessibility':
+            print('A cambiar')
             ACCESSIBILITY = not ACCESSIBILITY
             return(HttpResponseRedirect('/'))
         else:
-            return(HttpResponseRedirect('/'))
-################################################################################
-#            Redirigir a Página nula
-################################################################################
+            return(HttpResponseRedirect('/not_found'))
+
+
 def load_data():
     museum_matrix = []
     museum_matrix = parser.parse_to_matrix(URL2, True)
@@ -104,12 +100,6 @@ def load_data():
             print('Did not add ' + raw[0] + '. Already in DataBase')
             continue
     return True
-
-
-def add_comment(comment, museum):
-    DDBB.Comment(text = comment, museum=museum).save()
-    museum.num_comments += 1
-    museum.save()
 
 
 @csrf_exempt
