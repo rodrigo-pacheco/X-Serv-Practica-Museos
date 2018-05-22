@@ -65,6 +65,7 @@ def slash(request):
         print(top_museums)
         button_status = accessibilityDic[ACCESSIBILITY]                         # Get string to check button or nor
         context = Context({'aut': request.user.is_authenticated(),
+                           'name': request.user.username,
                            'accessible': button_status,
                            'museums': top_museums})
         return(HttpResponse(template.render(context)))
@@ -105,7 +106,7 @@ def load_DDBB(request):
         except NameError:
             exit('Server stopped working. Template missing')
         context = Context({'aut': request.user.is_authenticated(),
-                           'name': request.user.name})
+                           'name': request.user.username})
     elif request.method == 'POST':
         print(request.POST)
         if request.POST['Load'] == 'DDBB':
@@ -130,5 +131,6 @@ def not_found(request):
         template = get_template('museums/not_found.html')
     except NameError:
         exit('Server stopped working. Template missing')
-    context = Context({'aut': request.user.is_authenticated()})
+    context = Context({'aut': request.user.is_authenticated(),
+                       'name': request.user.username})
     return(HttpResponse(template.render(context)))
