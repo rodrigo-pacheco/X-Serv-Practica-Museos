@@ -4,7 +4,7 @@
 <head>
 <!-- <link rel="stylesheet" type="text/css" href="css/style.css" /> -->
 <link href="/static/style.css" rel="stylesheet" type="text/css">
-<title>webtom grey</title>
+<title>Museos de Madrid</title>
 </head>
 
 <body id="home">
@@ -43,17 +43,18 @@
     </ul>
 
     <div id="sidebar">
-        <h1>Menu</h1>
+        {% block sidebar %}{% endblock %}
+        <!-- <h1>Menu</h1>
         <ul id="sidebarnav">
             <li><a href="#">a link</a></li>
             <li><a href="#">another link</a></li>
-        </ul>
+        </ul> -->
     </div>
 
 	<div id="content">
-        <h2> Esto es un ejemplo </h2>
-        <p> De lo que es un párrafo </p>
-        <!-- {% block content %}{% endblock %} -->
+        <!-- <h2> Esto es un ejemplo </h2>
+        <!-- <p> De lo que es un párrafo </p> -->
+        {% block content %}{% endblock %}
 	</div>
 
     <div id="footer">
@@ -69,10 +70,6 @@
 
         <p>&copy; 2018 Rodrigo Pacheco | template design by <a href="http://www.webtom.be">webtom.be</a></p>
     </div>
-
-
-
-
 
 </div>
 

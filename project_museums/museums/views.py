@@ -11,26 +11,22 @@ from django.db import IntegrityError
 from django.db import OperationalError
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
-from django.template import loader
+from django.template.loader import get_template
+from django.template import Context
 
 import museums.xmlparser as parser
 import museums.models as DDBB
 
 from itertools import cycle
-accessIterator = cycle(['checked="True"', ''])  # Show checkbox checked or not          # Help from https://stackoverflow.com/questions/10986970/python-how-to-toggle-between-two-values and https://stackoverflow.com/questions/12700626/what-is-the-proper-way-to-check-and-uncheck-a-checkbox-in-html5
+accessibilityDic = {True: 'checked="True"',
+                    False: ''} #cycle([, ''])  # Show checkbox checked or not          # Help from https://stackoverflow.com/questions/10986970/python-how-to-toggle-between-two-values and https://stackoverflow.com/questions/12700626/what-is-the-proper-way-to-check-and-uncheck-a-checkbox-in-html5
 
 
 URL1 = 'https://raw.githubusercontent.com/CursosWeb/CursosWeb.github.io/master/etc/201132-0-museos.xml'
 URL2 = 'https://datos.madrid.es/portal/site/egob/menuitem.ac61933d6ee3c31cae77ae7784f1a5a0/?vgnextoid=00149033f2201410VgnVCM100000171f5a0aRCRD&format=xml&file=0&filename=201132-0-museos&mgmtid=118f2fdbecc63410VgnVCM1000000b205a0aRCRD&preview=full'
 
 
-ACCESSIBILITY = ''
-FORM_SLASH =  """ <form method=post accept-charset="utf-8">
-                  <input type="hidden" name="Load"   value="{}">
-                  <input type="hidden" name="Change" value="{}">
-                  {}
-                  </form>"""                                                            # Help from http://www.echoecho.com/htmlforms07.htm
-BUTTON = """<input type="radio" onclick="this.form.submit();" {}">"""                   # Help from: https://forums.digitalpoint.com/threads/html-checkbox-onclick-submit.1271195/
+ACCESSIBILITY = False
 
 def load_data():
     museum_matrix = []
@@ -56,13 +52,15 @@ def add_comment(comment, museum):
 
 @csrf_exempt
 def slash(request):
-    template = loader.get_template('museums/index.html')
-    return(HttpResponse(template.render()))
+    # template = loader.get_template('museums/index.html')
+    # return(HttpResponse(template.render()))
     global ACCESSIBILITY
     global FORM_SLASH
     if request.method == 'GET':
         try:
             if(len(DDBB.Museum.objects.all()) < 1):                                 # Check if DataBase is empty
+                print('DDBB is empty')
+                return(HttpResponseRedirect('/load'))
                 return(HttpResponse(FORM_SLASH.format(
                        'DDBB', '_', '<input type="submit" value="Cargar BBDD">')))
         #########################################################################################################################
@@ -89,9 +87,9 @@ def slash(request):
             else:
                 break
 
-        print('Accesibilidad: ' + ACCESSIBILITY)
+        print('Accesibilidad: ' + str(ACCESSIBILITY))
         return(HttpResponse('Accesibilidad: ' +
-               FORM_SLASH.format('_', 'accessibility', BUTTON.format(ACCESSIBILITY))))
+               FORM_SLASH.format('_', 'accessibility', BUTTON.format(accessibilityDic[ACCESSIBILITY]))))
 ################################################################################
 #            Botón para accesibilidad
 ################################################################################
@@ -105,10 +103,28 @@ def slash(request):
             load_data()
             return(HttpResponseRedirect('/'))
         elif request.POST['Change'] == 'accessibility':
-            ACCESSIBILITY = next(accessIterator)
+            ACCESSIBILITY = not ACCESSIBILITY
             return(HttpResponseRedirect('/'))
         else:
             return(HttpResponseRedirect('/'))
 ################################################################################
 #            Redirigir a Página nula
 ################################################################################
+@csrf_exempt
+def load_DDBB(request):
+    print('Im in load')
+    if request.method == 'GET':
+        try:
+            template = get_template('museums/loadDDBB.html')
+        except NameError:
+            print('Server stopped working. Template missing')
+        print('Después de except')
+        context = Context({'aut': False,                ################################################### CAMBIAR #########################################
+                           'sidebar': '<p<Hola</p>'})          ################################################### CAMBIAR #########################################
+        return(HttpResponse(template.render(context)))
+    elif request.method == 'POST':
+        print(request.POST)
+        if request.POST['Load'] == 'DDBB':
+            # load_data()
+            # return(HttpResponseRedirect('/'))
+            return(HttpResponseRedirect('/load'))

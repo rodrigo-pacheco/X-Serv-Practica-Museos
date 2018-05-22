@@ -24,4 +24,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'museums.views.slash'),
+    url(r'^load$', 'museums.views.load_DDBB')
 ]
