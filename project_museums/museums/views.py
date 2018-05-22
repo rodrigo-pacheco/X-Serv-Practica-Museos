@@ -35,20 +35,13 @@ def add_comment(comment, museum):
     museum.save()
 
 
-def museums_top_comments():
-    top_comments = (DDBB.Museum.objects.order_by('-num_comments')               # Help obtained from https://stackoverflow.com/questions/21106869/how-to-find-top-x-highest-values-in-column-using-django-queryset-without-cutting/21279059
-                    .values_list('num_comments', flat=True))                    # List with number of comments in decreasing order
-    top_records = (DDBB.Museum.objects.order_by('-num_comments')                # List of museums sorted by decreasing number of comments
-                   .filter(num_comments__in=top_comments[:5]))
-
-    museums_topcomments = []
-    for i in range(5):
-        if top_comments[i] > 0:
-            museums_topcomments.append(DDBB.Museum.objects
-                                      .get(name=top_records[i]))
-        else:
-            break
-    return museums_topcomments
+def museums_top_comments():    
+    museums_topcomments = DDBB.Museum.objects.all()                             # At first I tryed doing it as I had learnt from here: https://stackoverflow.com/questions/21106869/how-to-find-top-x-highest-values-in-column-using-django-queryset-without-cutting/21279059
+    museums_topcomments = museums_topcomments.exclude(num_comments=0)           # It worked but filtering by accessibility aftwerwars was not easy
+    museums_topcomments = museums_topcomments.order_by('-num_comments')         # Then I found the following way, that is much easier
+    if ACCESSIBILITY:
+        museums_topcomments = museums_topcomments.exclude(accessibility=False)
+    return museums_topcomments[:5]
 
 
 @csrf_exempt
@@ -68,10 +61,11 @@ def slash(request):
             template = get_template('museums/slash.html')
         except NameError:
             exit('Server stopped working. Template missing')
-
+        print(top_museums)
         button_status = accessibilityDic[ACCESSIBILITY]                         # Get string to check button or nor
         context = Context({'aut': False,       ################################################### CAMBIAR #########################################
-                           'accessible': button_status})
+                           'accessible': button_status,
+                           'museums': top_museums})
         return(HttpResponse(template.render(context)))
 
     elif request.method == 'POST':
