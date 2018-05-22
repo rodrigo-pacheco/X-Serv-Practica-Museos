@@ -20,11 +20,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', 'museums.views.slash'),
     url(r'^load$', 'museums.views.load_DDBB'),
-
+    url(r'^login', 'museums.views.my_login'),
+    url(r'^logout', logout, {'next_page': '/'}),                                # Help from: https://stackoverflow.com/questions/5315100/how-to-configure-where-to-redirect-after-a-log-out-in-django
     url(r'.*', 'museums.views.not_found'),
 ]

@@ -18,13 +18,13 @@
     <div id="header">
         <div id="user_login" style="float:right">
             {% if aut %}
-                <h3> Bienvenido {{ name }}</h3>
+                <h3>Bienvenido {{ name }}</h3>
                 <a class="boton" href="logout">Logout</a>
             {% else %}
                 <form method="post" action="login">
-                    <input class="textbox" type="text" name="username" placeholder="Username">
+                    <input class="textbox" type="text" name="username" placeholder="Nombre">
                     <input class="textbox" type="password" name="password" placeholder="Contraseña">
-                    <a class="boton" href="register">Registrarse</a>
+                    <!-- <a class="boton" href="register">Registrarse</a> -->
                     <input class="boton" type="submit" value="Login">
                 </form>
             {% endif %}

@@ -13,6 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.template.loader import get_template
 from django.template import Context
+from django.contrib.auth import authenticate, login
 
 import museums.xmlparser as parser
 import museums.models as DDBB
@@ -35,7 +36,7 @@ def add_comment(comment, museum):
     museum.save()
 
 
-def museums_top_comments():    
+def museums_top_comments():
     museums_topcomments = DDBB.Museum.objects.all()                             # At first I tryed doing it as I had learnt from here: https://stackoverflow.com/questions/21106869/how-to-find-top-x-highest-values-in-column-using-django-queryset-without-cutting/21279059
     museums_topcomments = museums_topcomments.exclude(num_comments=0)           # It worked but filtering by accessibility aftwerwars was not easy
     museums_topcomments = museums_topcomments.order_by('-num_comments')         # Then I found the following way, that is much easier
@@ -63,7 +64,7 @@ def slash(request):
             exit('Server stopped working. Template missing')
         print(top_museums)
         button_status = accessibilityDic[ACCESSIBILITY]                         # Get string to check button or nor
-        context = Context({'aut': False,       ################################################### CAMBIAR #########################################
+        context = Context({'aut': request.user.is_authenticated(),
                            'accessible': button_status,
                            'museums': top_museums})
         return(HttpResponse(template.render(context)))
@@ -103,8 +104,8 @@ def load_DDBB(request):
             template = get_template('museums/loadDDBB.html')
         except NameError:
             exit('Server stopped working. Template missing')
-        context = Context({'aut': False})                ################################################### CAMBIAR #########################################
-        return(HttpResponse(template.render(context)))
+        context = Context({'aut': request.user.is_authenticated(),
+                           'name': request.user.name})
     elif request.method == 'POST':
         print(request.POST)
         if request.POST['Load'] == 'DDBB':
@@ -112,11 +113,22 @@ def load_DDBB(request):
             return(HttpResponseRedirect('/'))
 
 
+@csrf_exempt
+def my_login(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        login(request, user)                                                    # Help from 'How to log a user in': https://docs.djangoproject.com/en/2.0/topics/auth/default/
+        return(HttpResponseRedirect('/'))
+    else:
+        return(HttpResponseRedirect('/'))
+
 
 def not_found(request):
     try:
         template = get_template('museums/not_found.html')
     except NameError:
         exit('Server stopped working. Template missing')
-    context = Context({'aut': False})                ################################################### CAMBIAR #########################################
+    context = Context({'aut': request.user.is_authenticated()})
     return(HttpResponse(template.render(context)))
