@@ -230,6 +230,19 @@ def museum_info(request, id):
     else:
         return(HttpResponseRedirect('/not_found'))
 
+
+def about(request):
+        try:
+            template = get_template('museums/about.html')
+        except NameError:
+            exit('Server stopped working. Template missing')
+
+        context = Context({'users': get_user_webs(),
+                           'name': request.user.username,
+                           'aut': request.user.is_authenticated()})
+        return(HttpResponse(template.render(context)))
+
+
 def not_found(request):
     try:
         template = get_template('museums/not_found.html')
