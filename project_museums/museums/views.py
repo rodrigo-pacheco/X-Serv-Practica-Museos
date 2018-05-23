@@ -98,6 +98,8 @@ def slash(request):
             return(HttpResponseRedirect('/'))
         else:
             return(HttpResponseRedirect('/not_found'))
+    else:
+        return(HttpResponseRedirect('/not_found'))
 
 
 def load_data():
@@ -134,6 +136,8 @@ def load_DDBB(request):
         if request.POST['Load'] == 'DDBB':
             load_data()
             return(HttpResponseRedirect('/'))
+    else:
+        return(HttpResponseRedirect('/not_found'))
 
 
 @csrf_exempt
@@ -182,12 +186,40 @@ def museums(request):
                            'museums': get_museum_list(DISTRICT)})
         return(HttpResponse(template.render(context)))
 
-    if request.method == 'POST':
+    elif request.method == 'POST':
         print(DISTRICT)
         DISTRICT = request.POST['District']
         print(DISTRICT)
         return(HttpResponseRedirect('/museos'))
+    else:
+        return(HttpResponseRedirect('/not_found'))
 
+
+def get_museum_comments(id):
+    try:
+        return(DDBB.Comment.objects.get(museum__id=id))
+    except DDBB.Comment.DoesNotExist:
+        return([])
+
+
+@csrf_exempt
+def museum_info(request, id):
+    if request.method == 'GET':
+        try:
+            template = get_template('museums/museum_info.html')
+        except NameError:
+            exit('Server stopped working. Template missing')
+
+        context = Context({'museum': DDBB.Museum.objects.get(id=id),
+                           'comments': get_museum_comments(id),
+                           'aut': request.user.is_authenticated()})
+        return(HttpResponse(template.render(context)))
+
+    elif request.method == 'POST':
+        print(request.POST)
+        return(HttpResponseRedirect('/not_found')) ########################################################################
+    else:
+        return(HttpResponseRedirect('/not_found'))
 
 def not_found(request):
     try:

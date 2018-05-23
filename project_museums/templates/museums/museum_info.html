@@ -9,27 +9,40 @@
 {% block content %}
 
     <section>
-        <ul>
-            <h2>Seleccione distrito:</h2>
-            <form name=district method="post">
-                <select name="District">
-                    {% for district in districts %}
-                        <option value="{{ district }}">{{ district }}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" value="Cambiar distrito">                  <!-- Help from: https://www.w3schools.com/tags/att_option_value.asp -->
-            </form>
-        </ul>
 
-        <h1>Museos del distrito seleccionado</h1>
-        {% for museum in museums %}
+        <h1>{{ museum.name }}                                            </br></h1>
+        <p> {{ museum.description}}                                      </br></p>
+        <p><b><u>Dirección:     </u></b> {{ museum.address}}             </br></p>
+        <p><b><u>Horario:       </u></b> {{ museum.open_hours}}          </br></p>
+        <p><b><u>Transporte:    </u></b> {{ museum.transport}}           </br></p>
+        <p><b><u>Accesibilidad: </u></b> {{ museum.accessibility}}       </br></p>
+        <p><b><u>Barrio:        </u></b> {{ museum.quarter}}
+           <b><u>Distrito:      </u></b> {{ museum.quarter}}             </br></p>
+        <p><b><u>Teléfono:      </u></b> {{ museum.tlf_number}}          </br></p>
+        <p><b><u>Email:         </u></b> {{ museum.email}}               </br></p>
+        <p><a href="{{ museum.url }}">Más información en web oficial</a> </br></p>
+        <hr>
+
+
+        {% for comment in comments %}
             <div></br>
-            <h3> {{ museum.name }} </h3>
-            <a href="{{ museum.url }}">Más información en web oficial</a></br>
-            <a href="museos/{{ museum.id }}">Mas información (en esta web)</a></br>
+            <h3> Comentario: </h3>
+            <p> {{ comment.text }}                  </p></br>
+            <p><b> Publicado: {{ comment.date }}    </p></br>
             <hr>
             </div>
         {% endfor %}
+
+
+        {% if aut %}                                                             <!-- Help from: https://www.w3schools.com/tags/tag_textarea.asp and https://stackoverflow.com/questions/18816735/textarea-not-posting-with-form -->
+            </br><h4> Publique su comentario: </h4>
+            <form name=comment method="post">
+                <textarea cols="220" rows ="10" name="comment"></textarea>
+                <input type="submit" value="Publicar comentario">
+            </form>
+        {% else %}
+            <h3> Inicie sesión para publicar su comentario: </h3>
+        {% endif %}
 
     </section>
 

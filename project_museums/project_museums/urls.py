@@ -29,6 +29,6 @@ urlpatterns = [
     url(r'^login', 'museums.views.my_login'),
     url(r'^logout', logout, {'next_page': '/'}),                                # Help from: https://stackoverflow.com/questions/5315100/how-to-configure-where-to-redirect-after-a-log-out-in-django
     url(r'^museos$', 'museums.views.museums'),
-    url(r'museos/(\d+))', 'museums.views.museum_info'),
+    url(r'^museos/(\d+)', 'museums.views.museum_info'),
     url(r'.*', 'museums.views.not_found'),
 ]
