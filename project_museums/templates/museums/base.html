@@ -22,7 +22,7 @@
                 <h3>Bienvenido {{ name }}</h3>
                 <a class="boton" href="logout">Logout</a>
             {% else %}
-                <form method="post" action="login">
+                <form method="post" action="login" action="http://127.0.0.1:8000/login">
                     <input class="textbox" type="text" name="username" placeholder="Nombre">
                     <input class="textbox" type="password" name="password" placeholder="Contraseña">
                     <!-- <a class="boton" href="register">Registrarse</a> -->

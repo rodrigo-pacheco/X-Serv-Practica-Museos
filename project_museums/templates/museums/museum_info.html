@@ -23,25 +23,27 @@
         <p><a href="{{ museum.url }}">Más información en web oficial</a> </br></p>
         <hr>
 
-
+        <h3> Comentarios: </h3></br>
         {% for comment in comments %}
-            <div></br>
-            <h3> Comentario: </h3>
-            <p> {{ comment.text }}                  </p></br>
-            <p><b> Publicado: {{ comment.date }}    </p></br>
-            <hr>
+            <div>
+                <p> {{ comment.text }}                      </p></br>
+                <div align='right'>                                             <!-- Help from: https://www.w3schools.com/tags/att_div_align.asp -->
+                    <p><b> Publicado: {{ comment.date }}    </p></br>
+                </div>
             </div>
         {% endfor %}
+        <hr>
 
 
-        {% if aut %}                                                             <!-- Help from: https://www.w3schools.com/tags/tag_textarea.asp and https://stackoverflow.com/questions/18816735/textarea-not-posting-with-form -->
-            </br><h4> Publique su comentario: </h4>
+        {% if aut %}                                                            <!-- Help from: https://www.w3schools.com/tags/tag_textarea.asp and https://stackoverflow.com/questions/18816735/textarea-not-posting-with-form -->
+            </br><h4> Publique su comentario: </h4></br>
             <form name=comment method="post">
-                <textarea cols="220" rows ="10" name="comment"></textarea>
+                <textarea cols="227" rows ="10" name="Comment"></textarea>      <!-- Help from: https://stackoverflow.com/questions/12529023/textarea-cursor-not-starting-from-beginning -->
+                <input type="hidden" name="Museum" value='{{museum.name}}'/>
                 <input type="submit" value="Publicar comentario">
             </form>
         {% else %}
-            <h3> Inicie sesión para publicar su comentario: </h3>
+            <h3> Inicie sesión para publicar comentarios</h3>
         {% endif %}
 
     </section>

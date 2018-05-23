@@ -33,11 +33,6 @@ DISTRICT = 'TODOS'
 
 USER_WEB = """<p><a href={} >{}</a> {} </p><hr>"""
 
-def add_comment(comment, museum):
-    DDBB.Comment(text = comment, museum=museum).save()
-    museum.num_comments += 1
-    museum.save()
-
 
 def get_user_webs():
     users_webs = ''
@@ -187,17 +182,21 @@ def museums(request):
         return(HttpResponse(template.render(context)))
 
     elif request.method == 'POST':
-        print(DISTRICT)
         DISTRICT = request.POST['District']
-        print(DISTRICT)
         return(HttpResponseRedirect('/museos'))
     else:
         return(HttpResponseRedirect('/not_found'))
 
 
+def add_comment(comment, museum):
+    DDBB.Comment(text = comment, museum=museum).save()
+    museum.num_comments += 1
+    museum.save()
+
+
 def get_museum_comments(id):
     try:
-        return(DDBB.Comment.objects.get(museum__id=id))
+        return(DDBB.Comment.objects.filter(museum__id=id))
     except DDBB.Comment.DoesNotExist:
         return([])
 
@@ -209,15 +208,19 @@ def museum_info(request, id):
             template = get_template('museums/museum_info.html')
         except NameError:
             exit('Server stopped working. Template missing')
-
+            print(get_museum_comments(id))
         context = Context({'museum': DDBB.Museum.objects.get(id=id),
                            'comments': get_museum_comments(id),
                            'aut': request.user.is_authenticated()})
         return(HttpResponse(template.render(context)))
 
     elif request.method == 'POST':
-        print(request.POST)
-        return(HttpResponseRedirect('/not_found')) ########################################################################
+        try:
+            museum = DDBB.Museum.objects.get(name=request.POST['Museum'])
+            add_comment(request.POST['Comment'], museum)
+            return(HttpResponseRedirect(''))
+        except DDBB.Museum.DoesNotExist:
+            return(HttpResponseRedirect(''))                                        # Help from: https://stackoverflow.com/questions/39560175/django-redirect-to-same-page-after-post-method-using-class-based-views
     else:
         return(HttpResponseRedirect('/not_found'))
 
