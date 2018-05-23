@@ -29,6 +29,7 @@ class Comment(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     text = models.TextField()
     museum = models.ForeignKey(Museum)
+    user = models.ForeignKey(User)
 
     def __str__(self):
         return (self.museum.name + ' -> ' + str(self.date))

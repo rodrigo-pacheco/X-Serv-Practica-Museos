@@ -37,7 +37,6 @@ USER_WEB = """<p><a href={} >{}</a> {} </p><hr>"""
 def get_user_webs():
     users_webs = ''
     for user in User.objects.all():
-        print(user.username + str(user.is_staff))
         if user.is_staff == True:                                               # Avoid showing admin's sites
             continue
         title = ''
@@ -191,8 +190,10 @@ def museums(request):
         return(HttpResponseRedirect('/not_found'))
 
 
-def add_comment(comment, museum):
-    DDBB.Comment(text = comment, museum=museum).save()
+def add_comment(comment, museum, username):
+    DDBB.Comment(text = comment,
+                 museum=museum,
+                 user=DDBB.User.objects.get(username=username)).save()
     museum.num_comments += 1
     museum.save()
 
@@ -211,8 +212,9 @@ def museum_info(request, id):
             template = get_template('museums/museum_info.html')
         except NameError:
             exit('Server stopped working. Template missing')
-            print(get_museum_comments(id))
+
         context = Context({'users': get_user_webs(),
+                           'name': request.user.username,
                            'museum': DDBB.Museum.objects.get(id=id),
                            'comments': get_museum_comments(id),
                            'aut': request.user.is_authenticated()})
@@ -221,7 +223,7 @@ def museum_info(request, id):
     elif request.method == 'POST':
         try:
             museum = DDBB.Museum.objects.get(name=request.POST['Museum'])
-            add_comment(request.POST['Comment'], museum)
+            add_comment(request.POST['Comment'], museum, request.user.username)
             return(HttpResponseRedirect(''))
         except DDBB.Museum.DoesNotExist:
             return(HttpResponseRedirect(''))                                    # Help from: https://stackoverflow.com/questions/39560175/django-redirect-to-same-page-after-post-method-using-class-based-views
@@ -234,7 +236,6 @@ def not_found(request):
     except NameError:
         exit('Server stopped working. Template missing')
     context = Context({'aut': request.user.is_authenticated(),
-                       'users': get_user_webs(),
                        'name': request.user.username,
                        'users': get_user_webs()})
     return(HttpResponse(template.render(context)))

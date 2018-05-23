@@ -28,7 +28,11 @@
             <div>
                 <p> {{ comment.text }}                      </p></br>
                 <div align='right'>                                             <!-- Help from: https://www.w3schools.com/tags/att_div_align.asp -->
-                    <p><b> Publicado: {{ comment.date }}    </p></br>
+                    <p><b> Publicado: {{ comment.date }}
+                           {% if aut %}
+                                por {{ comment.user.username }}
+                           {% endif %}
+                    </p></b></br>
                 </div>
             </div>
         {% endfor %}
