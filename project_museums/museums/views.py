@@ -220,7 +220,7 @@ def museum_info(request, id):
             add_comment(request.POST['Comment'], museum)
             return(HttpResponseRedirect(''))
         except DDBB.Museum.DoesNotExist:
-            return(HttpResponseRedirect(''))                                        # Help from: https://stackoverflow.com/questions/39560175/django-redirect-to-same-page-after-post-method-using-class-based-views
+            return(HttpResponseRedirect(''))                                    # Help from: https://stackoverflow.com/questions/39560175/django-redirect-to-same-page-after-post-method-using-class-based-views
     else:
         return(HttpResponseRedirect('/not_found'))
 
