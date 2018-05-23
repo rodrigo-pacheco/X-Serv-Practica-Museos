@@ -48,11 +48,11 @@ def get_user_webs():
         except DDBB.Style.DoesNotExist:
             pass
         if title == '':                                                         # '' is default value
-            users_webs += USER_WEB.format('/' + str(user.id,),
+            users_webs += USER_WEB.format('/museos/' + str(user.id,),
                                           'Página de ' + str(user.username),
                                           '')
         else:
-            users_webs += USER_WEB.format('/' + str(user.id,),
+            users_webs += USER_WEB.format('/museos/' + str(user.id,),
                                           title,
                                           '  por ' + str(user.username))
     return users_webs
