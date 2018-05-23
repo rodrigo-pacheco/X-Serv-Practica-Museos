@@ -37,6 +37,9 @@ USER_WEB = """<p><a href={} >{}</a> {} </p><hr>"""
 def get_user_webs():
     users_webs = ''
     for user in User.objects.all():
+        print(user.username + str(user.is_staff))
+        if user.is_staff == True:                                               # Avoid showing admin's sites
+            continue
         title = ''
         try:
             title = DDBB.Style.objects.get(user__username=user.username).title
@@ -209,7 +212,8 @@ def museum_info(request, id):
         except NameError:
             exit('Server stopped working. Template missing')
             print(get_museum_comments(id))
-        context = Context({'museum': DDBB.Museum.objects.get(id=id),
+        context = Context({'users': get_user_webs(),
+                           'museum': DDBB.Museum.objects.get(id=id),
                            'comments': get_museum_comments(id),
                            'aut': request.user.is_authenticated()})
         return(HttpResponse(template.render(context)))
@@ -230,6 +234,7 @@ def not_found(request):
     except NameError:
         exit('Server stopped working. Template missing')
     context = Context({'aut': request.user.is_authenticated(),
+                       'users': get_user_webs(),
                        'name': request.user.username,
                        'users': get_user_webs()})
     return(HttpResponse(template.render(context)))
