@@ -15,6 +15,7 @@ from django.template.loader import get_template
 from django.template import Context
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.utils.datastructures import MultiValueDictKeyError
 
 import museums.xmlparser as parser
 import museums.models as DDBB
@@ -32,26 +33,24 @@ ACCESSIBILITY = False
 DISTRICT = 'TODOS'
 
 USER_WEB = """<p><a href={} >{}</a> {} </p><hr>"""
+PAGE_LINK = '<a href="/{}/{}">{}</a>'
 
+
+def user_title(user):
+    try:
+        title = DDBB.Style.objects.get(user__username=user.username).title
+    except DDBB.Style.DoesNotExist:
+        title = 'Página de ' + str(user.username)
+    return(title)
 
 def get_user_webs():
     users_webs = ''
     for user in User.objects.all():
         if user.is_staff == True:                                               # Avoid showing admin's sites
             continue
-        title = ''
-        try:
-            title = DDBB.Style.objects.get(user__username=user.username).title
-        except DDBB.Style.DoesNotExist:
-            pass
-        if title == '':                                                         # '' is default value
-            users_webs += USER_WEB.format('/museos/' + str(user.id,),
-                                          'Página de ' + str(user.username),
-                                          '')
-        else:
-            users_webs += USER_WEB.format('/museos/' + str(user.id,),
-                                          title,
-                                          '  por ' + str(user.username))
+        title = user_title(user)
+        users_webs += USER_WEB.format('/' + str(user.username),
+                                     title, '  por ' + str(user.username))
     return users_webs
 
 
@@ -252,6 +251,73 @@ def museum_info(request, id):
             return(HttpResponseRedirect(''))                                    # Help from: https://stackoverflow.com/questions/39560175/django-redirect-to-same-page-after-post-method-using-class-based-views
     else:
         return(HttpResponseRedirect('/not_found'))
+
+
+def its_valid_user(username):
+    try:                                                                        # Check if user exists
+        DDBB.User.objects.get(username=user)
+        return True
+    except DDBB.User.DoesNotExist:
+        return False
+
+
+def user_first(request, user):
+    if its_valid_user == False:
+        return(HttpResponseRedirect('/not_found'))
+    return(HttpResponseRedirect('/' + user + '/1'))                             # Fist acccess to user's page. Redirected to user/1 to start with first museum views
+
+
+def get_navigation_links(username, numpage):
+    museums_liked = DDBB.Like.objects.filter(user__username=username)
+    nummuseums = museums_liked.count()                                          # Help from: https://stackoverflow.com/questions/5439901/getting-a-count-of-objects-in-a-queryset-in-django?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+    if nummuseums == 0:
+        return('<h3>Este usuario aún no ha seleccionado museos</h3>')
+
+    numpages = round((nummuseums/5)-0.5)                                        # Help from: https://docs.python.org/3/library/functions.html#round
+    print(nummuseums)
+    if nummuseums%5 != 0:                                                       # Unless it is a multiple of 5 one more page should be added
+        numpages += 1
+
+    nav_links = ''
+    for i in range(1, numpages+1):
+        if i == numpage:
+            nav_links += str(numpage)
+        else:
+            nav_links += PAGE_LINK.format(username, str(i), str(i))
+        if i != numpages:
+            nav_links += '  -  '                                                # Separator
+    return(nav_links)
+
+
+def get_liked_museums(user, numpage):
+    museums_liked = DDBB.Like.objects.filter(user__username=user)               # This returns a 'Liked' object, wih its user, date and museum
+    museums_liked = museums_liked.order_by('-id')                               # Museums have to be ordered some way in order not to repeat them
+
+    museums_in_page = []
+    for i in range(5*(numpage-1), 5*numpage):
+        try:
+            museums_in_page.append(museums_liked[i].museum)
+        except IndexError:
+            break
+
+    return museums_in_page
+
+
+def user_page(request, user, numpage):
+    if its_valid_user == False:
+        return(HttpResponseRedirect('/not_found'))
+    try:
+        template = get_template('museums/user.html')
+    except NameError:
+        exit('Server stopped working. Template missing')
+
+    context = Context({'aut': request.user.is_authenticated(),
+                       'name': request.user.username,
+                       'users': get_user_webs(),
+                       'liked_museums': get_liked_museums(user, int(numpage)),
+                       'title': user_title(DDBB.User.objects.get(username = user)),
+                       'page_link': get_navigation_links(user, int(numpage))})
+    return(HttpResponse(template.render(context)))
 
 
 def about(request):

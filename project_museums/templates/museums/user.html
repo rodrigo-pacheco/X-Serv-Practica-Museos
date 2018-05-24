@@ -1,0 +1,35 @@
+{% extends "museums/base.html" %}
+
+{% block home %}
+    <li><a id="homenav" href="/">Inicio</a></li>
+{% endblock %}
+
+
+{% block content %}
+    <div>
+    <section>
+
+        <ul>
+            <h1>{{ title }}</h1>
+            <p></br>Navegue por estas páginas para conocer los museos que
+                    {{ user.username }} ha seleccionado. Se mostrarán de 5
+                    en 5.</p>
+            {% for museum in liked_museums %}
+                <div></br>
+                <a href="{{ museum.url }}">{{ museum.name }}</a></br>
+                <p> Dirección: {{ museum.address }}</p>
+                <a href="museos/{{ museum.id }}">Mas información</a></br>
+                <hr>
+                </div>
+            {% endfor %}
+        </ul>
+
+        <ul>
+            <h2>Seleccione la página a la que navegar</h2></br>
+            {{ page_link|safe }}
+        </ul>
+
+    </section>
+</div>
+
+{% endblock %}
