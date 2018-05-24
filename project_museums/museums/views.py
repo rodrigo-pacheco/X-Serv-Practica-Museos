@@ -320,6 +320,24 @@ def user_page(request, user, numpage):
     return(HttpResponse(template.render(context)))
 
 
+def style(request):
+    try:
+        DDBB.Style.objects.get(user__username = request.user.username)
+        textsize = style.text_size
+        backgorund = style.colour
+    except DDBB.Style.DoesNotExist:
+        textsize = 'small'                                                      # Default value
+        backgorund = '#FFFFFF'                                                  # Default value
+    try:
+        template = get_template('museums/style.css')
+    except NameError:
+        exit('Server stopped working. Template missing')
+
+    context = Context({'fontsize': textsize,
+                       'backgorund': backgorund})
+    return(HttpResponse(template.render(context), content_type='text/css'))
+
+
 def about(request):
         try:
             template = get_template('museums/about.html')

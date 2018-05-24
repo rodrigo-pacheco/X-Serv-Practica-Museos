@@ -4,7 +4,7 @@
 
 body {
     font-family: "Trebuchet MS", Verdana, geneva, sans-serif;
-    font-size:small;
+    font-size:{{ fontsize }};
     background:#ccc;
 	margin:0;
 	padding:0;
@@ -49,7 +49,7 @@ h2 {
 #container {
 	width: auto;
 	margin: auto;
-	background:#fff;            /* Change this to change backgorund */
+	background: {{ backgorund }};
     font-size:95%;
 }
 

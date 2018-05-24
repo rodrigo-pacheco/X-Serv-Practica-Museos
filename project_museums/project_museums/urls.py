@@ -31,8 +31,9 @@ urlpatterns = [
     url(r'^museos$', 'museums.views.museums'),
     url(r'^museos/like$', 'museums.views.museums_like'),
     url(r'^museos/(\d+)', 'museums.views.museum_info'),
-    url(r'^about$', 'museums.views.about'),    
+    url(r'^about$', 'museums.views.about'),
     url(r'^not_found$', 'museums.views.not_found'),
+    url(r'^style\.css$', 'museums.views.style'),
     url(r'^([^/]*)$', 'museums.views.user_first'),
     url(r'^([^/]*)/(\d+)$', 'museums.views.user_page'),
 ]
