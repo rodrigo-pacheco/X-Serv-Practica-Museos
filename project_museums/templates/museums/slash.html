@@ -19,7 +19,7 @@
                 <p> Dirección: {{ museum.address }}</p>
                 <a href="museos/{{ museum.id }}">Mas información</a></br>
                 {% if aut %}
-                    <form method="post" action="http://127.0.0.1:8000/museos/like">
+                    <form method="post" action="/museos/like">
                         <input type="hidden" name="Museum" value='{{ museum.name }}'/>
                         <input type="submit" value="Seleccionar museo">
                     </form>

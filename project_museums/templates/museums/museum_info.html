@@ -22,7 +22,7 @@
         <p><b><u>Email:         </u></b> {{ museum.email}}               </br></p>
         <p><a href="{{ museum.url }}">Más información en web oficial</a> </br></p>
         {% if aut %}
-            <form method="post" action="http://127.0.0.1:8000/museos/like">
+            <form method="post" action="/museos/like">
                 <input type="hidden" name="Museum" value='{{ museum.name }}'/>
                 <input type="submit" value="Seleccionar museo">
             </form>
