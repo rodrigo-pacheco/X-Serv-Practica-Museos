@@ -190,14 +190,16 @@ def museums(request):
         return(HttpResponseRedirect('/not_found'))
 
 def add_like(museumname, username):
-    try:
+    try:                                                                        # If like already exists there is no need to add it again
+        DDBB.Like.objects.get(museum=DDBB.Museum.objects.get(name=museumname),
+                              user=DDBB.User.objects.get(username=username))
+        return()
+    except DDBB.Like.DoesNotExist:                                              # If it doesn't exist, exeption will raies and it will be added
         print(museumname)
         DDBB.Like(date = timezone.now(),
                   museum=DDBB.Museum.objects.get(name=museumname),
                   user=DDBB.User.objects.get(username=username)).save()
         return True
-    except:
-        return False
 
 
 @csrf_exempt
