@@ -35,13 +35,13 @@ class Comment(models.Model):
         return (self.museum.name + ' -> ' + str(self.date))
 
 
-# class Like(models.Model):
-#     date = models.DateTimeField(auto_now_add=True)
-#     user = models.ForeignKey(User)
-#     museum = models.ForeignKey(Museum)
-#
-#     def __str__(self):
-#         return (self.museum.name + ' -> ' + str(self.date))
+class Like(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User)
+    museum = models.ForeignKey(Museum)
+
+    def __str__(self):
+        return (self.museum.name + ' -> ' + str(self.date))
 
 
 class Style(models.Model):

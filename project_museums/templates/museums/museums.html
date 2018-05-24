@@ -26,6 +26,12 @@
             <h3> {{ museum.name }} </h3>
             <a href="{{ museum.url }}">Más información en web oficial</a></br>
             <a href="museos/{{ museum.id }}">Mas información (en esta web)</a></br>
+            {% if aut %}
+                <form method="post" action="http://127.0.0.1:8000/museos/like">
+                    <input type="hidden" name="Museum" value='{{ museum.name }}'/>
+                    <input type="submit" value="Seleccionar museo">
+                </form>
+            {% endif %}
             <hr>
             </div>
         {% endfor %}

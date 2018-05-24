@@ -189,6 +189,26 @@ def museums(request):
     else:
         return(HttpResponseRedirect('/not_found'))
 
+def add_like(museumname, username):
+    try:
+        print(museumname)
+        DDBB.Like(date = timezone.now(),
+                  museum=DDBB.Museum.objects.get(name=museumname),
+                  user=DDBB.User.objects.get(username=username)).save()
+        return True
+    except:
+        return False
+
+
+@csrf_exempt
+def museums_like(request):
+    if request.method == 'POST':
+        museum = request.POST['Museum']
+        add_like(museum, request.user.username)
+        return(HttpResponseRedirect('/museos'))
+    else:
+        return(HttpResponseRedirect('/not_found'))
+
 
 def add_comment(comment, museum, username):
     DDBB.Comment(text = comment,
@@ -196,6 +216,7 @@ def add_comment(comment, museum, username):
                  user=DDBB.User.objects.get(username=username)).save()
     museum.num_comments += 1
     museum.save()
+    return()
 
 
 def get_museum_comments(id):
