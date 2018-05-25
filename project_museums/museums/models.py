@@ -48,7 +48,7 @@ class Style(models.Model):
     title = models.CharField(max_length=128, default='')
     text_size = models.CharField(max_length=128, default='')
     colour = models.CharField(max_length=12)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)                    # If I delete a user I expect its Style to be deleted too
+    user = models.OneToOneField(User, on_delete=models.CASCADE)       # If I delete a user I expect its Style to be deleted too
 
     def __str__(self):
         return (self.title + str(self.user))

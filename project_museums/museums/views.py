@@ -267,15 +267,21 @@ def user_first(request, user):
 
 
 def save_style(username, title, background, textsize):
-    # try:                                                                        # Actually not needed because user is already checked before. Preventive coding (boring coding)
     user = DDBB.User.objects.get(username = username)
-    DDBB.Style(title = title,
-               text_size=textsize,
-               colour=background,
-               user=user).save()
+    try:
+        style = DDBB.Style.objects.get(user=user)                               # Style already existis for this user
+        print('Tengo style')
+        style.title = title
+        style.text_size = textsize
+        style.colour = background
+        style.save()
+        print('He salvado')
+    except DDBB.Style.DoesNotExist:
+        DDBB.Style(title = title,
+                   text_size=textsize,
+                   colour=background,
+                   user=user).save()
     return(True)
-    # except:
-        # return(False)
 
 
 def get_navigation_links(username, numpage):
@@ -339,7 +345,7 @@ def user_page(request, user, numpage):
         title = request.POST['Title']
         textsize = request.POST['Textsize']
         background = request.POST['Colour']
-        save_style(user, title, textsize, background)
+        save_style(user, title, background, textsize)
         return(HttpResponseRedirect(''))
     else:
         return(HttpResponseRedirect('/not_found'))

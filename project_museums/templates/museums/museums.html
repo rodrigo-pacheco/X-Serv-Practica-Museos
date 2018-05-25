@@ -28,7 +28,7 @@
             <a href="museos/{{ museum.id }}">Mas información (en esta web)</a></br>
             {% if aut %}
                 <form method="post" action="/museos/like">
-                    <input type="hidden" name="Museum" value='{{ museum.name }}'/>
+                    <input type="hidden" name="Museum" value="{{ museum.name }}"/>
                     <input type="submit" value="Seleccionar museo">
                 </form>
             {% endif %}
