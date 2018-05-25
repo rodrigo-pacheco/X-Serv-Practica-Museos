@@ -46,6 +46,11 @@ h2 {
     font-weight:normal;
 }
 
+#style_sidebar input{
+    width: 160px;
+
+}
+
 #container {
 	width: auto;
 	margin: auto;
@@ -116,7 +121,18 @@ h2 {
 {
     float:left;
     width:170px;
-    height:400px;
+    height:100%;
+    margin:5px 0px 5px 0px;
+    padding:10px;
+    color:#fff;
+    background:#666;
+}
+
+#style_sidebar
+{
+    float:right;
+    width:170px;
+    height:100%;
     margin:5px 0px 5px 0px;
     padding:10px;
     color:#fff;

@@ -6,6 +6,25 @@
 
 
 {% block content %}
+
+    {% if itsuserspage %}
+        <div id="style_sidebar">
+            <h5>Personalice su página</h5></br>
+            <form method="post">
+                <p>Titulo: </p>
+                <input type="text" name="Title" value="Página de {{ user.username }}">
+                <p>Color de fondo: </p>
+                <input type="color" name="Colour" value="#FFFFFF"></br>                       <!-- Help from: https://developer.mozilla.org/es/docs/Web/HTML/Elemento/input/color -->
+                <p>Tamaño de letra: </p>
+                <select name="Textsize">
+                    <option value="small">Pequeño</option>
+                    <option value="medium">Mediano</option>
+                    <option value="large">Grande</option>
+                </select></br></br>
+                <input type="submit" value="Personalizar">
+        </div>
+    {% endif %}
+
     <div>
     <section>
 

@@ -194,7 +194,6 @@ def add_like(museumname, username):
                               user=DDBB.User.objects.get(username=username))
         return()
     except DDBB.Like.DoesNotExist:                                              # If it doesn't exist, exeption will raies and it will be added
-        print(museumname)
         DDBB.Like(date = timezone.now(),
                   museum=DDBB.Museum.objects.get(name=museumname),
                   user=DDBB.User.objects.get(username=username)).save()
@@ -267,6 +266,18 @@ def user_first(request, user):
     return(HttpResponseRedirect('/' + user + '/1'))                             # Fist acccess to user's page. Redirected to user/1 to start with first museum views
 
 
+def save_style(username, title, background, textsize):
+    # try:                                                                        # Actually not needed because user is already checked before. Preventive coding (boring coding)
+    user = DDBB.User.objects.get(username = username)
+    DDBB.Style(title = title,
+               text_size=textsize,
+               colour=background,
+               user=user).save()
+    return(True)
+    # except:
+        # return(False)
+
+
 def get_navigation_links(username, numpage):
     museums_liked = DDBB.Like.objects.filter(user__username=username)
     nummuseums = museums_liked.count()                                          # Help from: https://stackoverflow.com/questions/5439901/getting-a-count-of-objects-in-a-queryset-in-django?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
@@ -274,7 +285,6 @@ def get_navigation_links(username, numpage):
         return('<h3>Este usuario aún no ha seleccionado museos</h3>')
 
     numpages = round((nummuseums/5)-0.5)                                        # Help from: https://docs.python.org/3/library/functions.html#round
-    print(nummuseums)
     if nummuseums%5 != 0:                                                       # Unless it is a multiple of 5 one more page should be added
         numpages += 1
 
@@ -303,26 +313,41 @@ def get_liked_museums(user, numpage):
     return museums_in_page
 
 
+@csrf_exempt
 def user_page(request, user, numpage):
-    if its_valid_user == False:
-        return(HttpResponseRedirect('/not_found'))
-    try:
-        template = get_template('museums/user.html')
-    except NameError:
-        exit('Server stopped working. Template missing')
+    if request.method == 'GET':
+        if its_valid_user == False:
+            return(HttpResponseRedirect('/not_found'))
+        try:
+            template = get_template('museums/user.html')
+        except NameError:
+            exit('Server stopped working. Template missing')
 
-    context = Context({'aut': request.user.is_authenticated(),
-                       'name': request.user.username,
-                       'users': get_user_webs(),
-                       'liked_museums': get_liked_museums(user, int(numpage)),
-                       'title': user_title(DDBB.User.objects.get(username = user)),
-                       'page_link': get_navigation_links(user, int(numpage))})
-    return(HttpResponse(template.render(context)))
+        itsuserspage = (user == request.user.username)
+        context = Context({'aut': request.user.is_authenticated(),
+                           'name': request.user.username,
+                           'users': get_user_webs(),
+                           'liked_museums': get_liked_museums(user, int(numpage)),
+                           'title': user_title(DDBB.User.objects.get(username = user)),
+                           'page_link': get_navigation_links(user, int(numpage)),
+                           'user': DDBB.User.objects.get(username = user),
+                           'itsuserspage': itsuserspage})
+        return(HttpResponse(template.render(context)))
+    elif request.method == 'POST':
+        if its_valid_user == False:
+            return(HttpResponseRedirect('/not_found'))
+        title = request.POST['Title']
+        textsize = request.POST['Textsize']
+        background = request.POST['Colour']
+        save_style(user, title, textsize, background)
+        return(HttpResponseRedirect(''))
+    else:
+        return(HttpResponseRedirect('/not_found'))
 
 
 def style(request):
     try:
-        DDBB.Style.objects.get(user__username = request.user.username)
+        style = DDBB.Style.objects.get(user__username = request.user.username)
         textsize = style.text_size
         backgorund = style.colour
     except DDBB.Style.DoesNotExist:

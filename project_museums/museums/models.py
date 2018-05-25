@@ -46,8 +46,8 @@ class Like(models.Model):
 
 class Style(models.Model):
     title = models.CharField(max_length=128, default='')
-    text_size = models.IntegerField()                                           # Could not be like this. To be revised
-    colour = models.CharField(max_length=12)                                    # Could not be like this. To be revised
+    text_size = models.CharField(max_length=128, default='')
+    colour = models.CharField(max_length=12)
     user = models.ForeignKey(User, on_delete=models.CASCADE)                    # If I delete a user I expect its Style to be deleted too
 
     def __str__(self):
