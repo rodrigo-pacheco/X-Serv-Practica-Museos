@@ -35,9 +35,9 @@
                     en 5.</p>
             {% for like in liked_museums %}
                 <div></br>
-                <a href="{{ museum.url }}">{{ like.museum.name }}</a></br>
+                <a href="{{ like.museum.url }}">{{ like.museum.name }}</a></br>
                 <p> Dirección: {{ like.museum.address }}</p>
-                <a href="/museos/{{ museum.id }}">Mas información</a></br>
+                <a href="/museos/{{ like.museum.id }}">Mas información</a></br>
                 <p>Seleccionado en fecha: {{ like.date }}</p>
                 <hr>
                 </div>

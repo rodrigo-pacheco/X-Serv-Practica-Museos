@@ -270,12 +270,10 @@ def save_style(username, title, background, textsize):
     user = DDBB.User.objects.get(username = username)
     try:
         style = DDBB.Style.objects.get(user=user)                               # Style already existis for this user
-        print('Tengo style')
         style.title = title
         style.text_size = textsize
         style.colour = background
         style.save()
-        print('He salvado')
     except DDBB.Style.DoesNotExist:
         DDBB.Style(title = title,
                    text_size=textsize,
@@ -312,7 +310,7 @@ def get_liked_museums(user, numpage):
     museums_in_page = []
     for i in range(5*(numpage-1), 5*numpage):
         try:
-            museums_in_page.append(museums_liked[i].museum)
+            museums_in_page.append(museums_liked[i])
         except IndexError:
             break
 
