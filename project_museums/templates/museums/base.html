@@ -19,7 +19,7 @@
     <div id="header">
         <div id="user_login" style="float:right">
             {% if aut %}
-                <h3>Bienvenido {{ name }}</h3>
+                <h3>Usuario:</br> {{ name }}</h3>
                 <a class="boton" href="/logout">Logout</a>
             {% else %}
                 <form method="post" action="/login">
