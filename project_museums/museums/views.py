@@ -358,7 +358,7 @@ def style(request):
         textsize = style.text_size
         backgorund = style.colour
     except DDBB.Style.DoesNotExist:
-        textsize = 'small'                                                      # Default value
+        textsize = 'medium'                                                     # Default value
         backgorund = '#FFFFFF'                                                  # Default value
     try:
         template = get_template('museums/style.css')
