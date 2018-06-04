@@ -219,7 +219,6 @@ def add_comment(comment, museum, username):
     DDBB.Comment(text = comment,
                  museum=museum,
                  user=DDBB.User.objects.get(username=username)).save()
-    # museum.num_comments += 1  ###################################################################
     museum.save()
     return()
 

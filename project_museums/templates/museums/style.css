@@ -145,7 +145,6 @@ h2 {
     width:auto;
     height:auto;
     padding:15px;
-     /* background:#ccc;        /* Change this to change backgorund */
     font-size: {{ fontsize }};
     margin-left: 200px;
     margin-top: 15px;
@@ -186,17 +185,6 @@ h2 {
     border:0;
 }
 
-
-#ads {
-	height:50px;
-    margin:0;
-    padding:0 20px;
-	background:#ddd;
-    color:#555;
-    font-size:95%;
-    text-align:right;
-    clear:both;
-}
 
 #footer {
     clear:both;
