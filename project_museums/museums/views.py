@@ -16,7 +16,9 @@ from django.template import Context
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.utils.datastructures import MultiValueDictKeyError
+from collections import OrderedDict
 
+import json
 import museums.xmlparser as parser
 import museums.models as DDBB
 
@@ -307,7 +309,7 @@ def get_navigation_links(username, numpage):
 
 
 def get_liked_museums(user, numpage):
-    museums_liked = DDBB.Like.objects.filter(user__username=user)               # This returns a 'Liked' object, wih its user, date and museum
+    museums_liked = DDBB.Like.objects.filter(user__username=user)               # This returns a 'Liked' object, with its user, date and museum
     museums_liked = museums_liked.order_by('-id')                               # Museums have to be ordered some way in order not to repeat them
 
     museums_in_page = []
@@ -350,6 +352,30 @@ def user_page(request, user, numpage):
         return(HttpResponseRedirect(''))
     else:
         return(HttpResponseRedirect('/not_found'))
+
+
+def user_json(request, username):
+    museums_liked = DDBB.Like.objects.filter(user__username=username)
+    print(museums_liked)
+    user_data = OrderedDict()
+    user_data['Museos'] = []
+    for like in museums_liked:
+        museum_info = OrderedDict()                                             # Help from: https://stackoverflow.com/questions/10844064/items-in-json-object-are-out-of-order-using-json-dumps
+        museum_info['nombre'] = like.museum.name                                # Help from: https://stackoverflow.com/questions/23110383/how-to-dynamically-build-a-json-object-with-python
+        museum_info['descripcion'] = like.museum.description
+        museum_info['horario'] = like.museum.open_hours
+        museum_info['transporte'] = like.museum.transport
+        museum_info['accesibilidad'] = like.museum.accessibility
+        museum_info['web'] = like.museum.url
+        museum_info['direccion'] = like.museum.address
+        museum_info['barrio'] = like.museum.quarter
+        museum_info['distrito'] = like.museum.district
+        museum_info['telefono'] = like.museum.tlf_number
+        museum_info['email'] = like.museum.email
+        user_data['Museos'].append([museum_info])
+
+    json_data = json.dumps(user_data, indent=4, sort_keys=True)                 # Help from: https://stackoverflow.com/questions/12943819/how-to-prettyprint-a-json-file
+    return(HttpResponse(json_data, content_type="application/json"))            # Help from: https://stackoverflow.com/questions/8583290/sending-json-using-the-django-test-client
 
 
 def style(request):

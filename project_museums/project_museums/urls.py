@@ -35,5 +35,7 @@ urlpatterns = [
     url(r'^not_found$', 'museums.views.not_found'),
     url(r'^style\.css$', 'museums.views.style'),
     url(r'^([^/]*)$', 'museums.views.user_first'),
+    url(r'^([^/]*)/json$', 'museums.views.user_json'),
     url(r'^([^/]*)/(\d+)$', 'museums.views.user_page'),
+    url(r'.*', 'museums.views.not_found'),
 ]
