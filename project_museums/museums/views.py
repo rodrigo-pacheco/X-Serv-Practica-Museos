@@ -54,13 +54,13 @@ def get_user_webs():
     return users_webs
 
 
-def museums_top_comments():
-    museums_topcomments = DDBB.Museum.objects.all()                             # At first I tryed doing it as I had learnt from here: https://stackoverflow.com/questions/21106869/how-to-find-top-x-highest-values-in-column-using-django-queryset-without-cutting/21279059
-    museums_topcomments = museums_topcomments.exclude(num_comments=0)           # It worked but filtering by accessibility aftwerwars was not easy
-    museums_topcomments = museums_topcomments.order_by('-num_comments')         # Then I found the following way, that is much easier
+def museums_top_likes():
+    museums_toplikes = DDBB.Museum.objects.all()                                # At first I tryed doing it as I had learnt from here: https://stackoverflow.com/questions/21106869/how-to-find-top-x-highest-values-in-column-using-django-queryset-without-cutting/21279059
+    museums_toplikes = museums_toplikes.exclude(num_likes=0)                    # It worked but filtering by accessibility aftwerwars was not easy
+    museums_toplikes = museums_toplikes.order_by('-num_likes')                  # Then I found the following way, that is much easier
     if ACCESSIBILITY:
-        museums_topcomments = museums_topcomments.exclude(accessibility=False)
-    return museums_topcomments[:5]
+        museums_toplikes = museums_toplikes.exclude(accessibility=False)
+    return museums_toplikes[:5]
 
 
 @csrf_exempt
@@ -74,7 +74,7 @@ def slash(request):
         except OperationalError:                                                # No DataBase at all
             exit('No Data Base. Please run manage.py migrate')
 
-        top_museums = museums_top_comments()
+        top_museums = museums_top_likes()
         try:
             template = get_template('museums/slash.html')
         except NameError:
@@ -194,9 +194,12 @@ def add_like(museumname, username):
                               user=DDBB.User.objects.get(username=username))
         return()
     except DDBB.Like.DoesNotExist:                                              # If it doesn't exist, exeption will raies and it will be added
+        museum = DDBB.Museum.objects.get(name=museumname)
         DDBB.Like(date = timezone.now(),
-                  museum=DDBB.Museum.objects.get(name=museumname),
+                  museum=museum,
                   user=DDBB.User.objects.get(username=username)).save()
+        museum.num_likes += 1
+        museum.save()
         return True
 
 
@@ -214,7 +217,7 @@ def add_comment(comment, museum, username):
     DDBB.Comment(text = comment,
                  museum=museum,
                  user=DDBB.User.objects.get(username=username)).save()
-    museum.num_comments += 1
+    # museum.num_comments += 1  ###################################################################
     museum.save()
     return()
 

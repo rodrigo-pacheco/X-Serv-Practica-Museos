@@ -19,7 +19,7 @@ class Museum(models.Model):
     district = models.CharField(max_length=24)
     tlf_number = models.CharField(max_length=128)
     email = models.CharField(max_length=48)
-    num_comments = models.IntegerField(default=0)
+    num_likes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
