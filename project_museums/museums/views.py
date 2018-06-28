@@ -258,14 +258,14 @@ def museum_info(request, id):
 
 def its_valid_user(username):
     try:                                                                        # Check if user exists
-        DDBB.User.objects.get(username=user)
+        DDBB.User.objects.get(username=username)
         return True
     except DDBB.User.DoesNotExist:
         return False
 
 
 def user_first(request, user):
-    if its_valid_user == False:
+    if its_valid_user(user) == False:
         return(HttpResponseRedirect('/not_found'))
     return(HttpResponseRedirect('/' + user + '/1'))                             # Fist acccess to user's page. Redirected to user/1 to start with first museum views
 
