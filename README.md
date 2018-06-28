@@ -1,6 +1,6 @@
-_Rodrigo Pacheco Martinez-Atienza
+Rodrigo Pacheco Martinez-Atienza
 
-Doble Grado Ing. Tecnologías de las Telecomunicaciones e Ing. Aeroespacial en Aeronavegación_
+Doble Grado Ing. Tecnologías de las Telecomunicaciones e Ing. Aeroespacial en Aeronavegación
 
 __Cuenta laboratorios linux__: rpacheco
 
@@ -13,8 +13,8 @@ __Funcionalidades opcionales:__
 + __Botón de accesibilidad encendido/apagado__. El botón que aporta la funcionalidad de seleccionar los museos que son accesibles o no permanece activado (o no) en función de su estado anterior y mantiene la opción seleccionada por el usuario.
 + __Autor de comentario si autenticado__: Si el usuario está autenticado puede quién publicó dicho comentario. Si no lo está, sólo se mostrará la fecha.
 
-[URL video parte obligatoria: ](https://youtu.be/3yRXgHDAJ1w)
+[URL video parte obligatoria](https://youtu.be/3yRXgHDAJ1w)
 
-[URL video parte opcional: ](https://youtu.be/VBhIGDgVc2g)
+[URL video parte opcional](https://youtu.be/VBhIGDgVc2g)
 
-La duración del vídeo de la parte obligatoria es ligeramente superior a los 3 minutos. La duración de la parte opcional es bastante inferior a los 3 minutos, por lo que el cómputo final es mucho menor que 6 minutos. Por favor tengan esto en cuenta.
+La duración del vídeo de la parte obligatoria es ligeramente superior a los 3 minutos. La duración de la parte opcional es ligeramente inferior a los 3 minutos. Por favor tengan esto en cuenta.
